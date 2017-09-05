@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<script type="text/javascript" src="${ctx}/js/sinova/holder/holder.js"></script>
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>厂商管理</span></div>
+  	<form class="" id="searchForm" name="searchForm" action="${ctx}/holder/list" method="post">
+		<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+		<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+		<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tb_searchbox mt20 bord_gray">
+    <tr>
+      <td>厂商名称：
+        <input class="input_normal w160" type="text" id="name_" name="name" value="${(holder.name)!''}"/>
+       	 厂商编码：
+        <input class="input_normal w160" type="text" id="sourceNo_" name="sourceNo" value="${(holder.sourceNo)!''}">
+        <br/>
+        	是否有效：
+        <select  name="state" id="state_">
+			<#if "${(holder.state)!''}"== '1'>
+				<option value="" >全 部</option>
+				<option value="1" selected="selected">有 效</option>
+				<option value="0">无 效</option>
+			<#elseif  "${(holder.state)!''}" == '0'>
+				<option value="" >全 部</option>
+				<option value="1">有 效</option>
+				<option value="0" selected="selected">无 效</option>
+			<#else>
+				<option value="" selected="selected">全 部</option>
+				<option value="1">有 效</option>
+				<option value="0">无 效</option>
+			</#if>
+		</select>
+        <span class="mr20"><a href="javascript:mySubmitForm('searchForm','CL');" class="bt_blue"><span>查询</span></a></span>
+        <span class="mr20"><a href="javascript:resetVal();" class="bt_blue"><span>重置</span></a></span>
+        </td>
+    </tr>
+  </table>
+  <p class="overflow mt10">
+  		<a class="bt_blue ml10 fr" href="javascript:void(0);" onclick="beforeAdd();"><span>添加</span></a>
+  </p>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mt15 tb_content1" style="border-collapse:collapse;empty-cells:hide">
+    <tr>
+      <!-- <th width="30"><input class="checkedAll" type="checkbox"  name="ids" id="ids"/></th> -->
+      <th>厂商编码</th>
+      <th>厂商名称 </th>
+      <th>联系人</th>
+      <th>联系人电话</th>
+      <!-- <th>创建人</th> -->
+      <th>创建时间</th>
+      <!-- <th>key</th> -->
+      <th>是否有效</th>
+      <th>操作 </th>
+    </tr>
+		<#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+		
+			<#list returnDatas.data as _data>
+				<tr id="${(_data.id)!''}">
+					<!-- 
+					<td>
+						<input name="check_li"   type="checkbox" value="${(_data.id)!''}" />
+					</td>
+					 -->
+					<td>
+					<label>${(_data.sourceNo)!''}</label>
+					</td>
+					<td>
+							${(_data.name)!''}
+					</td>
+					<td>
+							${(_data.finder)!''}
+					</td>
+					<td>
+							${(_data.finderPhone)!''}
+					</td>
+					<!-- 
+					<td>
+							${(_data.createUser)!''}
+					</td>
+					 -->
+					<td>
+							${((_data.createDate)?string("yyyy-MM-dd HH:mm:ss"))!''}
+					</td>
+					<!-- 
+					<td>
+							${(_data.token)!''}
+					</td>
+					 -->
+					<td>
+						<#if "${(_data.state)!''}" == "1">有效</#if>
+						<#if "${(_data.state)!''}" == "0">无效</#if>
+					</td>
+					<td>
+						<@shiro.hasPermission name="/holder/beforeUpdate" >
+							<a href="javascript:void(0);" onclick="beforeUpdate('${(_data.id)!''}');">编辑</a>
+						</@shiro.hasPermission>
+					</td>
+				</tr>
+			</#list>
+		</#if>
+  </table>
+  		<!-- 分页 -->
+  		<#if returnDatas.page??>
+			<@h.pagetoolbar page=returnDatas.page formId='searchForm' />
+		</#if>
+ </form>	
+</div>
+
+</body>
+</#escape>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>${(goods.goodsName)!''}</title>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="description" itemprop="description" content="${(goods.goodsName)!''}" />
+<meta itemprop="name" content="${(goods.goodsName)!''}" />
+<meta itemprop="image" content="${ctx}/images/share/logo.png" />
+<link rel="stylesheet" href="${ctx}/css/frontqrcode/ty.css" />
+</head>
+<body style="background:#fff">
+<img src="${ctx}/images/share/logo.png" height="0" width="0">
+<form action="${ctx}/qrcodedealing/dealingBusiness" method="post" id="submitForm">
+<div class="ty-phone">
+<div class="ty-screenwrap">
+  <div class="ty-screen show" data-href="">
+    <div class="ty-screen-content">
+      <header>
+		<div><img src="${ctx}/images/img/logo.png" alt="logo" title="中国移动" class="fn-left" width="196" height="36">
+		<span class="fn-left">山西</span></div>
+	  </header>
+      <div class="clear" style="clear:both"></div>
+      <div class="ty-comhead small">
+        <div class="title fn-clear">
+          <div class="j-call-prev back" onclick="upback();">
+            <em class="ty-comicon"></em>
+          </div>
+          <span class="text">${(goods.goodsName)!''}</span>
+          <em class="ty-icon icon-net22"></em>
+        </div>
+      </div>
+      <div class="ty-resultalert fn-hide">
+        <div class="msg"></div>
+        <div class="btn">
+          <div class="ty-btn j-call-url" data-href="index.html">
+            <span><em class="ty-comicon"></em>返回首页</span>
+          </div>
+        </div>
+      </div>
+      <div class="ty-alert fn-hide">
+        <div class="msg"></div>
+      </div>
+      <div class="ty-attrlist">
+        <ul>
+          <li>
+            <div class="key">资费标准</div>
+            <div class="val">${(goods.feeStandard)!''}</div>
+          </li>
+          <li>
+            <div class="key">详细描述</div>
+            <div class="val">${(goods.detailDesc)!''}</div>
+          </li>
+          <li>
+            <div class="key">商品简介</div>
+            <div class="val">${(goods.goodsDesc)!''}</div>
+          </li>
+           <li>
+            <div class="key">生效日期</div>
+            <div class="val">${(goods.effectWay)!''}</div>
+          </li>
+        </ul>
+        <div class="ty-btnwrap">
+          <div class="ty-btn j-call-next" data-href="javascript:void(0);" onclick="dealingBusiness('${(goods.id)!''}','${(busCode)!''}','${(feeCode)!''}','${(opId)!''}');">
+            <span><em class="ty-comicon"></em>办理</span>
+          </div>
+        </div>
+      </div>
+      <input type="hidden" id="opId" name="opId" value="${(opId)!''}"/>
+      <input type="hidden" id="goodsId" name="goodsId" value="${(goods.id)!''}"/>
+      <input type="hidden" id="busCode" name="busCode" value="${(busCode)!''}"/>
+      <input type="hidden" id="feeCode" name="feeCode" value="${(feeCode)!''}"/>
+      <input type="hidden" id="param" name="param" value="${(param)!''}"/>
+      <input type="hidden" id="busType" name="busType" value="${(busType)!''}"/>
+      <div class="ty-phonenum-place"></div>
+    </div>
+  </div>
+</div>
+</div>
+</form>
+<script src="${ctx}/js/sinova/frontqrcode/zepto-min.js"></script> 
+<script src="${ctx}/js/sinova/frontqrcode/ty.js"></script>
+<script src="${ctx}/js/sinova/frontqrcode/business.js"></script>
+<script src="${ctx}/js/coms/common/jquery-jtemplates.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route" ><span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>二维码列表入口</span></div>
+  <div style="width:250px; margin-left:100px; font-size:16px; padding-top:20px; text-align:center">
+  <p class="overflow mt10">扫一扫，关注更多移动业务</p>
+  <img class="mt10"  src="${ctx}/images/ewm.jpg"/>
+  <p class="overflow mt10">扫一扫，参与4G节活动 炒店扫码抽奖活动</p>
+  <img class="mt10"  src="${ctx}/images/4Gjie.png"/> 
+  <#if "${(iconName)!''}" != "admin">
+  <p class="overflow mt10">我的专属业务二维码</p>
+  <img class="mt10" src="${ctx}/upload/${(iconName)!''}" />
+  </#if>
+  </div>
+ 
+ 
+</div>
+</body>
+</#escape>

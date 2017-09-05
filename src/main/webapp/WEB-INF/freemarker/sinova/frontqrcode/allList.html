@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>4G套餐</title>
+<meta name="description" content="欢迎光临山西移动二维码直通车" />
+<meta name="keywords" content="qrcode" />
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="stylesheet" href="${ctx}/css/frontqrcode/ty.css" />
+<style>.ty-comlist dt .icon{
+  width: 60px;
+  text-align:center;
+}
+.ty-comlist dt .title{ padding-left:0}
+/*新增21050410开始*/
+.clear{clear:both;height:1px;width:100%;}
+.modal-body {
+	padding: 10px;
+}
+.ty-qrbox .input-hqyzm {
+	border: 1px solid #c3c3c5;
+	height: 35px;
+	font-size:14px; line-height:35px;
+	border-radius: 4px;
+	width:55%;
+	vertical-align:middle;
+	float: left;
+	padding-left: 6px;
+}
+.ty-qrbox .btn-hqyzm {
+	background: #ff7c00;
+	border: 1px solid #ff7c00;
+	color: #fff;
+	font-size: 16px;
+	line-height: 20px;
+	padding:6px 0;
+	margin-top: 2px;
+	text-align: center;
+	border-radius: 4px;
+	width: 40%;
+	float: right;
+}
+ .ty-qrbox .input-mm {
+	vertical-align:middle;
+	border: 1px solid #c3c3c5;
+	border-radius: 4px;
+	height: 35px;
+	font-size:14px;
+	line-height:35px;
+	width: 100%;
+	-moz-box-sizing: border-box; /*Firefox3.5+*/
+
+-webkit-box-sizing: border-box; /*Safari3.2+*/
+
+-o-box-sizing: border-box; /*Opera9.6*/
+
+-ms-box-sizing: border-box; /*IE8*/
+
+box-sizing: border-box; 
+}
+@media screen and (max-width:480px) {
+.ty-qrbox .input-hqyzm {
+	height: 33px;
+	line-height:33px;
+	width: 53%;
+	padding-left:6px;
+}
+.ty-qrbox .btn-hqyzm {
+	line-height: 18px;
+	font-size: 12px;
+	width: 42%;
+	padding-left:6px;
+	margin-top: 2px;
+	
+}
+.ty-qrbox .input-mm {
+	height: 35px;
+	line-height:35px;
+	font-size: 14px;
+	
+}
+}
+.mt10{margin-top:10px}
+.ty-qrbox .msg{padding:10px 0;}
+.ty-qrbox-confirm{width:100%}
+.msg .title{background:#f8f7f7;border-bottom:1px solid #e8e7e7;height: 35px;line-height: 35px;margin-top: -10px;padding-left: 10px;}
+/*新增21050410结束*/
+</style>
+</head>
+<body  style="background:#fff">
+<img src="${ctx}/images/1.png" height="0" width="0">
+<img src="${ctx}/images/img/frontqrcode/logo.png" alt="logo" title="中国移动" class="fn-left" width="50" height="50">
+<div class="ty-phone">
+  <div class="ty-screenwrap">
+    <header>
+		<div><img src="${ctx}/images/img/logo.png" alt="logo" title="中国移动" class="fn-left" width="196" height="36">
+		<span class="fn-left">山西</span></div>
+	</header>
+    <div class="ty-screen show" data-href="">
+      <div class="ty-screen-content">
+ <div style=" border-bottom: none; height:30px;" class="sx-phonenum"><span>尊敬的用户,您好！</span><em class="ty-comicon"></em></div>
+ <div style="vertical-align: top; padding-left: 20px; height: 28px; line-height: 21px;" class="sx-phonenum"><span style="margin: 0px; color: red; font-size: 12px;">为了您能够顺利办理业务，请不要使用wifi热点访问!</span></div>
+    
+    <ul class="tab_award">
+    <#if (typeMap??)&&(typeMap?size>0)>
+ 			<#list typeMap?keys as _data>
+ 				<li onclick="toBusList('${typeMap[_data].remark}','${(flowNo)!''}');">${typeMap[_data].name}</li>
+   			</#list>
+    </#if>
+</ul>
+        
+        </div>
+        <div class="ty-phonenum-place"></div>
+      </div>
+  </div>
+</div> 
+      
+<script src="${ctx}/js/sinova/frontqrcode/zepto-min.js"></script> 
+<script src="${ctx}/js/sinova/frontqrcode/ty.js"></script>
+<script src="${ctx}/js/sinova/frontqrcode/business.js"></script>
+<script src="${ctx}/js/coms/common/jquery-jtemplates.js"></script>
+</body>
+</html>

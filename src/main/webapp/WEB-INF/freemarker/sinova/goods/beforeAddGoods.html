@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+		<@h.head />
+<script type="text/javascript" src="${ctx}/js/sinova/goods/goods.js"></script>
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route">二维码直通车&nbsp;&gt;&nbsp;<span>商品管理编辑</span></div>
+  <div class="mt10 mb10">
+  	<a class="mr10 bt_blue"  href="javascript:history.go(-1)"><span>返回</span></a>
+  	<a class="mr10 bt_blue" href="javascript:;" onclick="resetAdd();"><span>重置</span></a>
+  	<@shiro.hasPermission name="/goods/update" >
+  	<a class="mr10 bt_blue" href="javascript:;" onclick="checkForm('0');" ><span>保存</span></a>
+  	</@shiro.hasPermission>
+  </div>
+  <div class="bord_gray padd_10 pb30">
+    <!--订单归属 开始-->
+    <div class="mt10">
+      <p class="fl leftName middle">商品名称： </p>
+      <div class="fl rightInfo middle">
+        <input type="text" class="text_1"  id="goodsName" name="goodsName" maxlength="100"/>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <!--订单归属 结束-->
+    <!--手机型号 开始-->
+    <div class="mt10">
+      <p class="fl leftName middle">资费代码：</p>
+      <div class="fl rightInfo middle">
+        <input type="text" class="text_1" id="feeCode" name="feeCode" maxlength="20"/>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <!--开始-->
+    <div class="mt10">
+      <p class="fl leftName middle">商品简介：</p>
+      <div class="fl rightInfo middle">
+        <textarea  rows="5" cols="80" id="goodsDesc" name="goodsDesc"></textarea>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <!--结束-->
+    <div class="mt10">
+      <p class="fl leftName middle">资费标准：</p>
+      <div class="fl rightInfo middle">
+        <input type="text" class="text_1" id="feeStandard" name="feeStandard" maxlength="20"/>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <!--开始-->
+    <div class="mt10">
+      <p class="fl leftName middle">详细描述：</p>
+      <div class="fl rightInfo middle">
+        <textarea   rows="5" cols="80" id="detailDesc" name="detailDesc" ></textarea>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <!--结束-->
+    <div class="mt10">
+      <p class="fl leftName middle">生效方式：</p>
+      <div class="fl rightInfo middle">
+        <input type="text" class="text_1" id="effectWay" name="effectWay" maxlength="30"/>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <div class="mt10">
+      <p class="fl leftName middle">办理方式：</p>
+      <div class="fl rightInfo middle">
+        <input type="text" class="text_1" id="transactWay" name="transactWay" maxlength="30"/>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <!--手机型号 结束-->
+    <!--手机颜色 开始-->
+    <div class="mt10">
+      <p class="fl leftName middle">业务ID：</p>
+      <div class="fl rightInfo middle">
+        <select id="busId" name="busId">
+          <option value="">请选择</option>
+          <#if (BusDatas??)&&(BusDatas?size>0)>
+			<#list BusDatas as _data>
+					<option value="${(_data.id)!''}" >${(_data.busName)!''}</option>
+	        </#list>
+		   </#if>
+        </select>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <!--手机颜色 结束-->
+    <div class="mt10">
+      <p class="fl leftName middle">排序：</p>
+      <div class="fl rightInfo middle">
+        <input type="text" class="text_1" name="sort" id="sort" maxlength="11"  onkeypress="return IsNum(event);"/>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+  <!--按钮 开始-->
+  <div class="mt10 mb10">
+	  <a class="mr10 bt_blue"  href="javascript:history.go(-1)"><span>返回</span></a>
+	  <a class="mr10 bt_blue" href="javascript:;" onclick="resetAdd();"><span>重置</span></a>
+	  <@shiro.hasPermission name="/goods/update" >
+  		<a class="mr10 bt_blue" href="javascript:;" onclick="checkForm('0');" ><span>保存</span></a>
+  	  </@shiro.hasPermission>
+  </div>
+  <!--按钮 结束-->
+</div>
+<div id="cover" class="cover"></div>
+
+</div>
+</body>
+
+</#escape>

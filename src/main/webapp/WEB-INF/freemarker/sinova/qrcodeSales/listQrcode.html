@@ -1,0 +1,269 @@
+<!-- <!doctype html>
+<html> -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/> 
+<title>二维码列表</title>
+<link rel="stylesheet" href="${ctx}/css/qrcodeSales/style.css" />
+<script type="text/javascript">
+	var count1 = "60";
+		function controlTime1(o){
+			//1定时器内元素状态
+			if(count1 >0){
+				window.setTimeout(function(){
+					count1--;
+					document.getElementById("check_start1").value = count1+"秒后重发验证码";
+					controlTime1(this);
+				},1000); 
+			}
+			//2定时器解除后元素状态
+			else {
+				document.getElementById("check_start1").disabled=false;
+				document.getElementById("check_start1").value = "获取动态验证码";
+				count1 = "60";
+			}
+			
+		}
+	function mySubmitForm(formId,_target){
+		//分页
+		if (typeof(_target) == "undefined" || _target == "") { 
+		   
+			}else{
+				$("#pageIndex").val("1");
+			}
+		$("#"+formId).submit();
+	}
+	//获取验证码
+function getVcode(){
+	var phoneNo = $("#phoneNo").val();
+	if(phoneNo==""){
+		 alert("请输入手机号码!");
+		return;
+	}
+	var url = ctx + "/qrcodeSales/checkPhone";
+		$.ajax({
+       		url:url,
+       		type:"post",
+       		data:"phoneNo="+phoneNo,
+       		dataType : "json",
+       		success:function(date){
+				if(date.status=="1"){
+					controlTime1();
+				}else if(date.status=="0"){
+					alert("请输入山西移动手机号");
+					return;
+				}else if(date.status=="-1"){
+					alert("输入手机号没有绑定工号！");
+					return;
+				}else{
+					alert("系统异常，请稍后再试！");
+					return;
+				}
+				
+			},
+       		error:function(){
+       			alert("系统异常，请稍后再试！");
+       		}
+       	});
+	}
+// 登录
+function login(){
+	var vCode = $("#vCode").val();
+	var phoneNo = $("#phoneNo").val();
+	if(phoneNo==""){
+		 alert("请输入手机号码!");
+		return;
+	}
+	if(vCode==""){
+		 alert("请输入动态验证码!");
+		return;
+	}
+	
+	var url =  ctx + "/qrcodeSales/checkVCode";
+	$.ajax({
+       		url:url,
+       		type:"post",
+       		data:"phoneNo="+phoneNo+"&vCode="+vCode,
+       		dataType : "json",
+       		success:function(date){
+				if(date.status=="1"){
+					window.location.href = ctx + "/qrcodeSales/writePhone?phoneNo="+phoneNo;
+				}else if(date.status=="0"){
+					alert("验证码输入错误！");
+					return;
+				}else if(date.status=="-1"){
+					alert("系统超时，请重新获取验证码！");
+					return;
+				}else{
+					alert("系统异常，请稍后再试！");
+					return;
+				}
+				
+			},
+       		error:function(){
+       			alert("系统异常，请稍后再试！");
+       		}
+       	});
+}	
+</script>
+<body>
+<img src="${ctx}/images/1.png" height="0" width="0"/>
+<div class="wapwrap" id="taa">
+<p><span>姓名：${(user.name)!''}</span><span class="ml20">工号：${(user.workno)!''}</span></p>
+
+<form id="searchForm" name="searchForm" action="${ctx}/qrcodeSales/getPhoneNo" method="post">
+	<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+	<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+	<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+	<input type="hidden" name="userName" id="userName" value="${(user.name)!''}" />
+	<input type="hidden" name="workno" id="workno" value="${(user.workno)!''}" />
+	<input type="hidden" name="flag" id="flag" value="${(flag)!''}"/>
+	  <div class="input-append">
+	    <div class="span2"><input  id="qrcodeName" name="qrcodeName" type="text" style="width:90%;border:none; line-height:22px; float:left" value="${(qrcodeName)!''}"/>
+	   <!--  <button onclick="" type="button" class="close" data-dismiss="modal" aria-hidden="true" style="display:inline-block"> × </button> --></div>
+	    <a href="javascript:void(0);"   onclick="mySubmitForm('searchForm','CL');">
+	    	<span class="add-on">搜索</span>
+	    </a>
+	  </div>
+	  <!-- <div><a href="${ctx}/css/choujiang/cjDetails.html"><p style="text-align: center;color: red;font-size: 14px;">4G节活动 炒店扫码抽奖活动</p><img width="35%" src="${ctx}/images/4Gjie.png"></a><p>&nbsp;</p></div> -->
+	   <#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+			<#list returnDatas.data as _data>
+		<ul style="font-size: 10px">
+	    	<li><a href="${ctx}/qrcodeSales/findDetails?id=${(_data.id)!''}&workno=${(user.workno)!''}&userName=${(user.name)!''}"><img src="${ctx}/upload/${(_data.iconName)!''}" width="100%"/></a>
+	    		<p><a href="${ctx}/qrcodeSales/findDetails?id=${(_data.id)!''}&workno=${(user.workno)!''}&userName=${(user.name)!''}">${(_data.qrcodeName)!''}</a></p>
+	    	</li>
+		</ul>
+	    	</#list>
+	   </#if> 
+<div class="clear"></div>
+
+	 <ul class="pagination">
+	 <!-- 分页 -->
+		<#if returnDatas.page??>
+		 <#assign page=returnDatas.page,formId='searchForm'/>
+			<#if (page.pageIndex >= page.pageCount) && (page.pageCount != 0)>
+				<#assign index = page.pageCount />
+			<#else>
+				<#assign index = page.pageIndex />
+		</#if>
+	
+	   <div class="page middle">
+
+    <div class="">
+      <label><a href="javascript:startPage('${formId}');">首页</a></label>
+      <label>
+      <#assign _start=1 />
+				<#if (index>3)>
+					<#assign _start=index-2 />
+				</#if>
+				
+				<#assign _end=1 />
+				<#if (page.pageCount-index>=2)>
+					<#assign _end=index+2 />
+				<#else>
+				    <#assign _end=page.pageCount />
+				</#if>
+				
+				<#if (_end<1)>
+					<#assign _end=1 />
+				</#if>
+	                
+   		 <#if "${(returnDatas.page.pageIndex-1)}" != '0'>
+	 			<a href="javascript:toPage('${formId}','${(returnDatas.page.pageIndex-1)}');">
+  				
+      		<#else>
+      	 		 <a href="javascript:void(0);">
+      	</#if>
+      	 上一页</a>
+      </label>
+      <label>      
+    <#if (page.pageCount-returnDatas.page.pageIndex>0)>
+   			<a href="javascript:toPage('${formId}','${(returnDatas.page.pageIndex+1)}');">
+      	<#else>
+      	 <a href="javascript:void(0);">
+      	  	
+      	</#if>
+
+                下一页</a>
+        </label>
+      <label><a href="javascript:endPage('${formId}','${page.pageCount}');">末页</a></label>
+    
+  </div>
+		</#if>
+		</div>
+		</ul>
+		
+</form>
+
+</div>
+
+<div class="modal-dialog" id="tcc">
+    <div class="modal-header">
+     
+      <h4 id="myModalLabel" class="modal-title"> 请先登录 </h4>
+    </div>
+    <div class="modal-body"> <div class="mt10">
+    	<input class="input-hqyzm" style="font-size: 14px;" name="phoneNo" id="phoneNo"  value="${(phoneNo)!''}" maxlength="11" placeholder="请输入手机号" onkeypress="return IsNum(event);" onkeyup="change('phoneNo',this.value);"/> 
+    	
+    	<input class="btn-hqyzm"  type="button" id="check_start1"  onclick="getVcode();" value="获取动态验证码" />
+    <div class="clear"></div>
+    </div>
+    <div class="mt10">
+    	<input class="input-mm" name="vCode" id="vCode" style="font-size: 14px;" maxlength="6" placeholder="动态验证码 " onkeypress="return IsNum(event);" onkeyup="change('vCode',this.value);"/> </div>
+    </div>
+    <div class="modal-footer">
+      <button data-dismiss="modal" class="btn " type="button" onclick="login();" >登录 </button>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+
+	var flag = '${(flag)!''}';
+	if(flag=="1"){
+		hideid("tcc");
+	}else{
+	
+showid('tcc');
+	}
+	
+		
+
+	//弹出层
+	function showid(idname){
+		var newbox = document.getElementById(idname);
+		newbox.style.zIndex = "9999999";
+		newbox.style.display = "block"
+		newbox.style.position = "fixed" ;
+		newbox.style.top = newbox.style.left = "50%";
+		newbox.style.marginTop = -newbox.offsetHeight / 2 + "px";
+		newbox.style.marginLeft = -newbox.offsetWidth / 2 + "px";
+		var layer = document.createElement("div");
+		layer.id = "layer";
+		layer.style.width = layer.style.height = "100%";
+		layer.style.position =  "fixed" ;
+		layer.style.top = layer.style.left =layer.style.right =layer.style.bottom= 0;
+		layer.style.backgroundColor = "#000";
+		layer.style.zIndex = "9999998";
+		layer.style.opacity = "0.5";
+		document.body.appendChild(layer);
+		window.onresize=function (){
+		newbox.style.marginTop = -newbox.offsetHeight / 2 + "px";
+		newbox.style.marginLeft = -newbox.offsetWidth / 2 + "px";	}
+		
+	}
+	
+function hideid(idname){
+	var newbox = document.getElementById(idname);
+	newbox.style.display = "none";
+	var layer = document.getElementById("layer");
+	document.body.removeChild(layer);
+	}
+   	
+
+</script>
+</body>
+</#escape>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>${(goods.secondCategory)!''}</title>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="stylesheet" href="${ctx}/css/frontqrcode/ty.css" />
+</head>
+<body>
+<img src="${ctx}/images/1.png" height="0" width="0">
+<form action="${ctx}/qrcodedealing/submitBusiness" method="post" id="submitForm">
+<div class="ty-phone">
+  <div class="ty-screenwrap">
+    <div class="ty-screen show" data-href="">
+      <div class="ty-screen-content">
+      	<header>
+			<div><img src="${ctx}/images/img/logo.png" alt="logo" title="中国移动" class="fn-left" width="196" height="36">
+			<span class="fn-left">山西</span></div>
+		</header>
+	    <div class="clear" style="clear:both"></div>
+        <div class="ty-comhead small">
+          <div class="title fn-clear">
+            <div class="j-call-prev back" onclick="upback()"> <em class="ty-comicon"></em> </div>
+            <span class="text">${(goods.goodsName)!''}</span> <em class="ty-icon icon-net22"></em> </div>
+        </div>
+       
+        <div class="ty-qrbox" >
+          <div class="msg">
+            <p class="title">尊敬的用户：${(phone)!''}</p>
+            <br/>
+            <p class="yxtc" style="text-align:center;">您选择办理的业务为<span class="name">《${(goods.goodsName)!''}》</span></p>
+       		<p style="text-align:center;"><small>${(goods.effectWay)!''}</small></p>
+       		<br/>
+          </div>
+                <input type="hidden" id="opId" name="opId" value="${(opId)!''}"/>
+                <input type="hidden" id="goodsId" name="goodsId" value="${(goodsId)!''}"/>
+                <input type="hidden" id="phone" name="phone" value="${(phone)!''}"/>
+                <input type="hidden" id="busCode" name="busCode" value="${(busCode)!''}"/>
+          		<input type="hidden" id="feeCode" name="feeCode" value="${(feeCode)!''}"/>
+          		<input type="hidden" id="backP" name="backP" value="${(backP)!''}"/>
+         		<input type="hidden" id="param" name="param" value="${(param)!''}"/>
+         		<input type="hidden" id="cDate" name="cDate" value="${(cDate)!''}"/>
+          <div class="ty-qrbox-confirm" > <span class="btn_submit j-call-submit" data-url="blyz.html" onClick="show('cover','tcc')" ><em class="ty-comicon"></em>确认</span> <span class="btn_back j-call-prev"  onclick="upback();"><em class="ty-comicon" ></em>返回</span></div>
+          <div class="wxts"><p class="wxts-title">温馨提示：</p>
+          <div><p>1、不含12593/17951/12520/12586等号码产生的基本通话费。</p><p>2、国内电话不含港澳台。</p><p>3、仅含CMWAP和CMNET产生的流量，超出后正常收取流量费。
+</p></div></div>
+        </div>
+        <div class="ty-phonenum-place"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+<!--弹出层开始-->
+<div id="cover"></div>
+<div class="ty-confirm"  id="tcc" ><div class="content"><div class="msg">尊敬的客户，您即将办理<p class="protitle">${(goods.goodsName)!''}</p></div><div class="btn_wrap"><span class="btn_submit" onClick="goBusiness()"><em class="ty-comicon"></em>确定办理</span><span class="btn_cancel"  onClick="hide('cover','tcc')"><em class="ty-comicon"></em>取消操作</span></div></div></div>
+<script src="${ctx}/js/sinova/frontqrcode/zepto-min.js"></script> 
+<script src="${ctx}/js/sinova/frontqrcode/ty.js"></script>
+<script src="${ctx}/js/sinova/frontqrcode/business.js"></script>
+<script src="${ctx}/js/coms/common/jquery-jtemplates.js"></script>
+</body>
+</html>

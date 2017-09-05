@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="${ctx}/js/sinova/county/county.js"></script>
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route">二维码直通车&nbsp;&gt;&nbsp;<span>区县添加</span></div>
+  <div class="mt10 mb10">
+  	<a class="mr10 bt_blue"  href="${ctx}/county/list"><span>返回</span></a>
+  	<a class="mr10 bt_blue" onclick="cleanqrcodes();"><span>重置</span></a>
+  	<a onclick="commonSaveForma()" class="mr10 bt_blue" href="javascript:void(0);"><span>添加</span></a>
+  </div>
+  <div class="bord_gray padd_10 pb30">
+  <div class="mt10">
+      <p class="fl leftName middle">地市名称：</p>
+      <div class="fl rightInfo middle">
+      	<select id="regionCode_" name="regionCode" >
+			<option value="">请选择</option>
+			<#list dataRegion as _dataRegion>
+			<option value="${(_dataRegion.regionCode)!''}">${(_dataRegion.regionName)!''}</option>
+			</#list>
+		</select>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <div class="mt10">
+      <p class="fl leftName middle">区县编号：</p>
+      <div class="fl rightInfo middle">
+       <input type="hidden" class="text_1" id="id_" name="id" readonly="readonly"/>
+        <input type="text" class="text_1" id="countyCode_" name="countyCode" maxlength="7" onkeyup="this.value=this.value.replace(/\D/g,'')"/>最多只能输入7位数字
+      </div>
+      <div class="clear"></div>
+    </div>
+    <div class="mt10">
+      <p class="fl leftName middle">区县名称：</p>
+      <div class="fl rightInfo middle">
+        <input type="text" class="text_1" id="countyName_" name="countyName" maxlength="10"/>最多只能输入10位
+      </div>
+      <div class="clear"></div>
+    </div>
+    <div class="mt10">
+      <p class="fl leftName middle">是否有效：</p>
+      <div class="fl rightInfo middle">
+        <select  name="state" id="state_">
+				<option value="" >全 部</option>
+				<option value="1" >有 效</option>
+				<option value="0">无 效</option>
+		</select>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+  <!--按钮 开始-->
+  <div class="mt10 mb10">
+  	<a class="mr10 bt_blue"  href="${ctx}/county/list"><span>返回</span></a>
+  	<a class="mr10 bt_blue" onclick="cleanqrcodes();"><span>重置</span></a>
+  	<a onclick="commonSaveForma()" class="mr10 bt_blue" href="javascript:void(0);"><span>添加</span></a>
+  </div>
+  <!--按钮 结束-->
+</div>
+</body>
+</#escape>

@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>二维码详情</title>
+<link href="${ctx}/css/qrcodeSales/style.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+<!--
+function back(){
+	var workno = $("#workno").val();
+	var name = $("#userName").val();
+	window.location.href = ctx + "/qrcodeSales/getPhoneNo?workno="+workno+"&userName="+name;
+}
+//-->
+</script>
+<body>
+<img src="${ctx}/images/1.png" height="0" width="0"/>
+<div class="wapwrap">
+<input type="hidden" id="workno" name="workno" value="${(user.workno)!''}"/>
+<input type="hidden" id="userName" name="userName" value="${(user.name)!''}"/>
+<div class="ewmxq"><img src="${ctx}/upload/${(qrcode.iconName)!''}"/><p>${(qrcode.qrcodeName)!''}</p></div>
+<div class="ewmbox">
+<div class="ewmtext"><h3>业务内容：</h3>
+<p>${bus}</p>
+</div></div>
+<div class="goback ">
+      <button  class="btn " type="button" onclick="back();">返回 </button>
+    </div>
+</div>
+</body>
+</#escape>

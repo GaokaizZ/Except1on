@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html> 
+	<@h.head />
+<script type="text/javascript" src="${ctx}/js/sinova/goodsAct/goodsAct.js"></script>
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>商品管理</span>&nbsp;&gt;&nbsp; <span>关联营销活动</span></div>
+  <form class="" id="searchForm" name="searchForm" action="${ctx}/goodsAct/list" method="post">
+	<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+	<!--  <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.feeCode)!'desc'}" />-->
+	<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+	<input type="hidden" name="goodsId" id="goodsId" value="${(goodsAct.goodsId)!''}"/>
+	<input type="hidden" name="groupId" id="groupId" value="${(groupId)!''}"/>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tb_searchbox mt20 bord_gray">
+    <tr>
+      <td>商品名称：
+        <input class="input_normal w160" name="goodsName" id="goodsName" value="${(goodsName)!''}"/>
+        资费代码：
+        <input class="input_normal w160" name="feeCode" id="feeCode" value="${(feeCode)!''}"/>
+        是否关联：
+        <select  name="relation" id="relation" >
+        	<#if "${relation!''}"== '1'>
+				<option value="">全部</option>
+				<option value="1" selected="selected">已关联</option>
+				<option value="0">未关联</option>
+			<#elseif "${relation!''}" == '0'>
+				<option value="">全部</option>
+				<option value="1">已关联</option>
+				<option value="0" selected="selected">未关联</option>
+			<#else>
+				<option value="" selected="selected">全部</option>
+				<option value="1">已关联</option>
+				<option value="0">未关联</option>
+			</#if>
+        </select>
+        <br/>
+       
+        所属业务：
+        <select  id="busName" name="busName">
+          <option selected="selected" value="">全部</option>
+         <#if (busdata??)&&(busdata?size>0)> 
+			<#list busdata as _data>
+				<#if "${(_data.id)!''}" == "${(busName)!''}">
+					<option value="${(_data.id)!''}" selected="selected">
+						${(_data.busName)!''}
+					</option>
+				<#else>
+					<option value="${(_data.id)!''}">
+						${(_data.busName)!''}
+					</option>
+				</#if> 
+			</#list> 
+			</#if>
+        </select>
+        <span class="mr20"><a href="javascript:mySubmitForm('searchForm','CL');" class="bt_blue"><span>查询</span></a></span>
+		<span class="mr20"><a href="javascript:resetVal();" class="bt_blue"><span>重置</span></a></span>
+	 </td>		
+    </tr>
+  </table>
+  <p class="overflow mt10">
+  	<a class="mr10 bt_blue fl"  href="javascript:back();"><span>返回</span></a>
+  	<a class="bt_blue ml10 fr" href="javascript:void(0)" onclick="plDelRelation();"><span>批量取消关联</span></a>
+  	<a class="bt_blue ml10 fr" href="javascript:void(0)" onclick="plAddRelation();" ><span>批量添加关联</span></a>
+  </p>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mt15 tb_content1">
+    <tr>
+      <th width="30"><input class="checkedAll" type="checkbox"  name="ids" id="ids"/></th>
+      <th>商品名称 </th>
+      <th>资费代码</th>
+      <th>资费标准 </th>
+      <th>生效方式</th>
+      <th>办理方式</th>
+      <th>所属业务</th>
+      <th>是否关联</th>
+      <th>操作</th>
+    </tr>
+    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+		<#list returnDatas.data as _data>
+		    <tr id="${(_data.id)!''}">
+		      <td><input  type="checkbox"  name="check_li" value="${(_data.id)!''}" /></td>
+		      <td>${(_data.goodsName)!''}</td>
+		      <td>${(_data.feeCode)!''}</td>
+		      <td>${(_data.feeStandard)!''}</td>
+		      <td>${(_data.effectWay)!''}</td>
+		      <td>${(_data.transactWay)!''}</td>
+		      <td>
+			      <#if (busdata??)&&(busdata?size>0)> 
+					<#list busdata as _bdata>
+						 <#if "${(_bdata.id)!''}" == "${(_data.busId)!''}">
+							${(_bdata.busName)!''} 
+						  	<#break>
+						 </#if>
+					</#list> 
+				  </#if>
+			  </td>
+		      <td>
+		        <#if "${_data.goodsDesc}"= 'YI_GL'> 已关联 <#else>未关联</#if>
+			  </td>
+		      <td>
+		      	<#if "${_data.goodsDesc}"= 'YI_GL'> 
+		      		<a href="javascript:void(0);" onclick="delRelation('${(_data.id)!''}')">取消关联</a>
+		      	<#else>
+		      		<a href="javascript:void(0);" onclick="addRelation('${(_data.id)!''}')">添加关联</a>
+		      	</#if>
+		      </td>
+		    </tr>
+    	</#list>
+    </#if>
+  </table>
+  <!-- 分页 -->
+			<#if returnDatas.page??> 
+				<@h.pagetoolbar page=returnDatas.page formId='searchForm' /> 
+			</#if>
+</form>
+</div>
+</body>
+</#escape>

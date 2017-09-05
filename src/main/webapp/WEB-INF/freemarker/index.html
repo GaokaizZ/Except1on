@@ -1,0 +1,29 @@
+<#escape x as x?html>
+		<@h.head />
+		<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="topHeader">
+  <tr>
+    <td class="topLeft" valign="top" style=" width:220px;"><img src="${ctx}/images/logo2.png" width="220" height="86" />
+      <label class="write font20" style="right:-385px">山西移动二维码直通车后台管理系统</label></td>
+    <td><div class="topRight font12 cFff fontST text_r fr"> <span class=" fontb mr10">欢迎您，<@shiro.principal property="name" /></span> <a href="${ctx}/logout" class="aqtc mr10">安全退出</a> </div>
+      <div class="clear"></div>
+     </td>
+  </tr>
+</table>
+		<input type="hidden" id="tokenId_" value="${(token)!''}"/>
+		<@h.left />
+		
+    <!--右侧引用 开始-->
+       <td>
+      <div id="iframeRight" class="bgFFF">
+        <iframe frameborder="0" width="100%" height="100%" scrolling="auto" src="${ctx}/home" ></iframe>
+      </div>
+      </td>
+      <!--右侧引用 结束-->
+		      
+  </tr>
+</table>
+		<@h.footer /> 
+</body>
+</#escape>
+

@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+		<@h.head />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,user-scalable=yse,maximum-scale=1.0;"/> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>二维码</title>
+<style>
+body{ background:#ebebeb; margin:0; padding:0; font-size:14px;}
+.ewmtitle{ line-height:3.5em; height:3.5em; background:#0077c2; color:#fff; text-align:center}
+.ewmbox { margin:0; padding:0; list-style:none}
+.ewmbox li{ line-height:3.5em; float:none; clear:both; border-bottom:1px solid #ccc; background:#fff; height:3.5em}
+.ewmbox li a{ display:block; overflow: hidden; text-decoration:none;  }
+.ewm-icon{ background:url(${ctx}/images/ewmbg1.gif) no-repeat center center; display:inline-block; float:left; width:50px; height:3.5em;}
+.ewm-comicon{ background:url(${ctx}/images/ewmbg2.gif) no-repeat center center; display:inline-block; float:right; width:20px; height:3.5em;}
+.ewmtext{ color:#0077c2; float:left}
+</style>
+
+
+<body>
+<img src="${ctx}/images/1.png" height="0" width="0"/>
+<div class="ewmtitle">${(qrcodeName)!''}</div>
+<ul class="ewmbox">
+<#if (datas??)&&(datas?size>0)>
+	<#list datas as _data>
+		<li><a href="${(_data.exUrl)!''}"  onclick="count('${(_data.id)!''}');"><em class="ewm-icon"></em><div class="ewmtext">${(_data.spare1)!''}</div> <em class="ewm-comicon"></em></a></li>
+	</#list>
+</#if>	
+</ul>
+<script src="${ctx}/js/coms/common/jquery-jtemplates.js"></script>
+<script type="text/javascript">
+	function count(id){
+		var _url = ctx + "/exQrcode/count?id="+id;
+		jQuery.ajax({
+			url:_url,
+			type:"post",
+			dataType:"json",
+			success:function(_json){
+				
+			}
+		});
+	}
+</script>
+</body>
+</#escape>

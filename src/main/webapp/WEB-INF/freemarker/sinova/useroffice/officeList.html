@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<#escape x as x?html>
+		<@h.head />
+<script type="text/javascript" src="${ctx}/js/sinova/office/office.js"></script>
+<script type="text/javascript">
+	
+function mySubmitForm(formId,_target){
+		//分页
+		if (typeof(_target) == "undefined" || _target == "") { 
+		   
+			}else{
+				$("#pageIndex").val("1");
+			}
+	$("#"+formId).submit();
+}
+
+function reset(){
+	$("#regionName_").val("");
+	$("#countyName_").val("");
+	$("#officeName_").val("");
+	$("#state_").val("");
+}
+</script>		
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>营业厅用户管理</span></div>
+  <form id="searchForm" name="searchForm" action="${ctx}/useroffice/listoffice" method="post">
+	  	<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+		<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+		<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+  
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tb_searchbox mt20 bord_gray">
+    <tr>
+      <td>地市名称：
+        <input class="input_normal w160" type="text" id="regionName_" name="regionName" value="${(region.regionName)!''}"/>
+        	区县名称：
+        <input class="input_normal w160" type="text" id="countyName_" name="countyName" value="${(county.countyName)!''}"/>
+        <br/>
+        	营业厅名称：
+        <input class="input_normal w160" type="text" id="officeName_" name="officeName" value="${(office.officeName)!''}"/>
+        <!-- 	是否有效：
+        <select  name="state" id="state_">
+          
+          <#if "${office.state!''}"== '1'>
+			    <option value="" >全部</option>
+				<option value="1" selected="selected">有效</option>
+			    <option value="0">无效</option>
+			<#elseif  "${office.state!''}" == '0'>
+				<option value="" >全部</option>
+				<option value="1">有效</option>
+			    <option value="0" selected="selected">无效</option>
+			<#else>
+				<option value="" selected="selected">全部</option>
+				<option value="1">有效</option>
+			    <option value="0">无效</option>
+			</#if>
+          
+        </select>
+         -->
+      <span class="mr20">
+      	<a href="javascript:mySubmitForm('searchForm','CL');" class="bt_blue"><span>查询</span></a>
+      	<a href="javascript:reset();" class="bt_blue"><span>重置</span></a>
+      </span>
+     </td>
+    </tr>
+  </table>
+ 
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mt15 tb_content1" style="border-collapse:collapse;empty-cells:hide">
+   
+    <tr>
+     <!--  <th width="30"><input class="checkedAll" type="checkbox"  name="ids" id="ids"/></th> -->
+      <th>地市名称 </th>
+      <th>区县名称</th>
+      <th>营业厅编号</th>
+      <th>营业厅名称</th>
+      <th>营业厅地址</th>
+      <th>是否有效</th>
+      <th>操作</th>
+    </tr>
+   
+    
+      <#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+		<#list returnDatas.data as _data>
+		    <tr id="${(_data.id)!''}">
+				<td>
+					<#if (dataRegion??)&&(dataRegion?size>0)>
+							<#list dataRegion as _rdata>
+								<#if "${(_rdata.regionCode)!''}" == "${(_data.regionCode)!''}">
+									${(_rdata.regionName)!''}
+									<#break>
+								</#if>	
+					        </#list>
+					    </#if>
+				</td>
+				<td>
+					<#if (dataCounty??)&&(dataCounty?size>0)>
+							<#list dataCounty as _cdata>
+								<#if "${(_cdata.countyCode)!''}" == "${(_data.countyCode)!''}">
+									${(_cdata.countyName)!''}
+									<#break>
+								</#if>	
+					        </#list>
+					    </#if>
+				</td>
+				<td>${(_data.officeCode)!''}</td>
+				<td>${(_data.officeName)!''}</td>
+				<td>${(_data.address)!''}</td>
+				<td>
+					<#if "${(_data.state)!''}" == "1">有效</#if>
+					<#if "${(_data.state)!''}" == "0">无效</#if>
+				</td>
+				<td>
+					<@shiro.hasPermission name="/useroffice/list" >
+					 <a href="javascript:void(0);" onclick="addUser('${(_data.officeCode)!''}','${(_data.regionCode)!''}','${(_data.countyCode)!''}','CL');" >添加用户</a>
+					</@shiro.hasPermission>
+				</td>
+ 		        <td style="display:none;">${(_data.regionCode)!''}</td> 
+ 		        <td style="display:none;">${(_data.countyCode)!''}</td> 
+		    </tr>
+		</#list>
+	  </#if>
+    
+   
+  </table>
+  <#if returnDatas.page??>
+			<@h.pagetoolbar page=returnDatas.page formId='searchForm' />
+		</#if>
+</form>
+</div>
+
+</body>
+</#escape>

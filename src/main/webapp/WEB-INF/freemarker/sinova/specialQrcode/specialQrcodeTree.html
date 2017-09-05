@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="${ctx}/js/coms/sco/css/scojs.css" rel="stylesheet" />
+<script type="text/javascript" src="${ctx}/js/coms/sco/js/sco.ajax.js"></script>
+<script type="text/javascript" src="${ctx}/js/system/role/modal.js"></script>
+<link rel="stylesheet" href="${ctx}/js/coms/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css"/>
+<script type="text/javascript" src="${ctx}/js/coms/ztree/js/jquery.ztree.all-3.5.js"></script>
+<script type="text/javascript">
+<!--
+	var menuMultiSelectSetting = {
+		expandAll:true,
+		check: {
+			enable: true,
+			chkStyle: "checkbox",
+			chkboxType: { "Y" : "ps", "N" : "ps" }
+		},
+		data : {
+			
+			simpleData : {
+				enable : true,
+				idKey : "id",
+				pIdKey : "pid",
+				rootPId : "null"
+			}
+		}
+	};
+	
+	$(document).ready(function() {
+		jQuery.post("${ctx}/specialqrcode/list/json",
+			function(_json) {
+				if (_json.status == "success") {
+					$.fn.zTree.init($("#menuMultiSelectTree"), menuMultiSelectSetting,_json.data);
+					checkedZtreeNodes(jQuery("#namestr").val(),"menuMultiSelectTree");
+				} else {
+					alert(_json.message);
+				}
+			});
+	});
+	
+	var a=1;
+	function update(){
+	
+		selectZtreeMenu('menuMultiSelectTree');
+		var namestr = jQuery("#namestr").val();
+		var checkStr = jQuery("#checkStr").val();
+		//alert(namestr);
+		//alert(checkStr);
+		if(a==1){
+			a=0;
+			$.ajax({
+				url:ctx + "/specialqrcode/update",
+				type:"post",
+				data:"namestr="+namestr+"&checkStr="+checkStr,
+				dataType:"json",
+				success:function(msg){
+					if(msg.status=="success"){
+						alert("恭喜你！修改成功。");
+						window.location.href = ctx + "/specialqrcode/list";
+						a=1;
+					}else{
+						alert("修改失败！");
+						window.location.href = ctx +"/specialqrcode/list";
+						a=1;
+					}
+				},
+				error:function(){
+					alert("修改失败，请稍后再试！");
+					a=1;
+				}
+			});
+		
+		}else{
+			alert("不能重复提交");
+		}
+	}
+	function selectZtreeMenu(uuid) {
+		var zTree = $.fn.zTree.getZTreeObj(uuid);
+	
+		var nodes = zTree.getCheckedNodes(false);
+		var nnodes = zTree.getCheckedNodes(true);
+		var feeCode = "";
+		var checkStr = "";
+		jQuery(nnodes).each(function(i, obj) {
+			checkStr = checkStr + obj.id + ",";
+		});
+		jQuery(nodes).each(function(i, obj) {
+			feeCode = feeCode + obj.id + ",";
+		});
+		jQuery("#namestr").val(feeCode);
+		jQuery("#checkStr").val(checkStr);
+	
+	}
+	
+//-->
+</script>
+<style>
+.queding{float:right;}
+</style>
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>我的专属业务</span></div>
+  <form  id="searchForm" name="searchForm" action="${ctx}/specialqrcode/list" method="post">
+  <p class="overflow mt10">
+  	<a class="bt_blue" href="javascript:update();"><span>确定</span></a>
+  	<span style="line-height:27px" class="red">如果是第一次进入，请点击确定生成专属二维码！</span>
+  </p>
+  
+  <input name="namestr"  id="namestr" type="hidden"  value="${(namestr)!''}"/>
+  <input name="checkStr"  id="checkStr" type="hidden"  value="${(checkStr)!''}"/>
+ 	<div class="fl bmLeft mt10" style="width:800px">
+		<!-- 菜单树 -->
+		<div >
+			<ul id="menuMultiSelectTree" class="ztree"></ul>
+		</div>
+	</div>	
+  
+ </form>
+</div>
+</body>
+</#escape>

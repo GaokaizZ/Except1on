@@ -1,0 +1,81 @@
+<#escape x as x?html>
+
+<script src="${ctx}/js/coms/common/jquery-1.11.1.min.js"></script>
+<script src="${ctx}/js/coms/common/jquery-jtemplates.js"></script>
+<script src="${ctx}/ace/js/bootstrap-paginator.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	jQuery.ajax({
+		url: "${ctx}/region/list/json",
+		type : "post",
+		datatype: 'json',
+		success : function(_json) {
+			if(_json.status=="success"){
+				showpaginator(_json);
+				showdata(_json);
+		    }
+		}
+	});
+	
+});
+
+function showpaginator(result) {
+	var options = {
+		current_page: result.page.pageIndex,//当前页
+		page_count: result.page.pageCount,//总页数
+		button_number: 5,
+		
+		pager_click: function (pageclickednumber) {
+			jQuery.ajax({
+	       		url: "${ctx}/region/list/json",
+	       		type : "post",
+	       		datatype: 'json',
+	       		data: { pageIndex:pageclickednumber },
+	       		success : function(_json) {
+	       			if(_json.status=="success"){
+	       				showpaginator(_json);
+	       				showdata(_json);
+	       		    }
+	       		}
+			});
+       }
+	};
+	$("#example").paginator(options);
+}
+function showdata(result) {
+	$("#CustomersList").setTemplateElement("Template-List");
+    $("#CustomersList").processTemplate(result);
+}
+</script>
+
+<!-- Templates -->
+<p style="display:none">
+<textarea id="Template-List" rows="0" cols="0">
+<!--
+  {#template MAIN}
+    <table>
+      <tr class="{#cycle values=['bcEEC','bcCEE']}">
+        <td class="header">地市编号</td>
+        <td class="header">地市名称</td>
+      </tr>
+      {#foreach $T.data as region}
+        {#include ROW root=$T.region}
+      {#/for}
+    </table>
+  {#/template MAIN}
+  
+  {#template ROW}
+    <tr class="{#cycle values=['bcEED','bcDEE']}">
+      <td>{$T.regionCode}</td>
+      <td>{$T.regionName}</td>
+    </tr>
+  {#/template ROW}
+-->
+</textarea>
+</p>
+
+<div id="CustomersList" class="Content"></div>
+<div id="example"></div>
+
+</#escape>

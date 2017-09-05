@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<style>
+.tb_content1 td {
+	padding: 0
+}
+.tb_content1 tr tr.odd td {
+	background: #fff
+}
+.tb_content1 tr.odd tr td {
+	background: #f9f9f9
+}
+.tb_content1 td td {
+	padding: 6px 0
+}
+table.tb_content_con {
+	border-right: none
+}
+table.tb_content_con td {
+	cursor: pointer
+}
+.add_sub {
+	font-size: 14px;
+	border: 1px solid #aaa;
+	margin-right: 5px;
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	position: absolute;
+	top: 8px;
+	left: 10px;
+	cursor: pointer;
+	background: url(${ctx}/images/add_sub.gif) -2px -2px no-repeat
+}
+span.open {
+	background: url(${ctx}/images/add_sub.gif) -2px -35px no-repeat
+}
+.td-p-check {
+	width: 80px;
+	position: relative;
+	text-align: center;
+}
+.td-c-check {
+	width: 80px;
+	position: relative; padding:0; margin:0;
+}
+.c-check {
+	position: absolute;
+	top: 6px;
+	right: 10px;
+}
+</style>
+
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>我的专属业务</span></div>
+  <form  id="searchForm" name="searchForm" action="${ctx}/specialqrcode/list" method="post">
+ 	<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+	<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+	<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+	<input type="hidden" name="totalCount" id="totalCount" value="${(returnDatas.page.totalCount)!'0'}" />
+  <table width="100%" cellspacing="0" cellpadding="0" border="0" class="tb_searchbox mt20 bord_gray">
+    <tbody>
+      <tr>
+        <td>
+          业务编码：
+          <input class="input_normal w160" id="busCode" name="busCode" value="${(busCode)!''}"/>
+        业务名称：
+          <input class="input_normal w160" id="busName" name="busName" value="${(busName)!''}"/>
+        <!--   <br/>
+          办理方式：
+          <select name="select">
+            <option selected="selected">全部</option>
+            <option>有效</option>
+            <option>无效</option>
+          </select> -->
+          是否添加：
+          <select id="type" name="type">
+           <#if "${type!''}"== '1'>
+			    <option value="" >全部</option>
+				<option value="1" selected="selected">已添加</option>
+			    <option value="0">未添加</option>
+			<#elseif  "${type!''}" == '0'>
+				<option value="" >全部</option>
+				<option value="1">已添加</option>
+			    <option value="0" selected="selected">未添加</option>
+			<#else>
+				<option value="" selected="selected">全部</option>
+				<option value="1">已添加</option>
+			    <option value="0">未添加</option>
+			</#if>
+        </select>
+          <span class="mr20"><a class="bt_blue" href="javascript:mySubmitForm('searchForm','CL');"><span>查询</span></a></span>
+          <a class="bt_blue" href="javascript:resetVal();"><span>重置</span></a></td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="overflow mt10">
+  	<a class="bt_blue ml10 fr" href="javascript:update();"><span>确定</span></a>
+  	<span style="line-height:27px" class="fr red">如果是第一次进入，请点击确定生成专属二维码！</span>
+  </p>
+  <table width="100%" cellspacing="0" cellpadding="0" border="0" class="mt15 tb_content1" id="">
+    <thead>
+      <tr>
+        <th width="80" style="text-align:center"><input type="checkbox" name="items" class="j-checkedAll"/>&nbsp;</th>
+        <th width="40%">业务编号 </th>
+        <th >业务名称</th>
+      </tr>
+      </thead>
+    </table>
+   <table width="100%" cellspacing="0" cellpadding="0" border="0" class=" tb_content1" id="table1">
+  
+      <tbody>
+    <#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+		<#list returnDatas.data as _data>
+      <tr >
+        <td colspan="3">
+        <table width="100%" cellspacing="0" cellpadding="0" border="0" class=" tb_content_con">
+            <thead>
+              <tr>
+                <td  class="td-p-check"><span class="add_sub"></span>
+                <input type="checkbox" name="itemss" value="${(_data.id)!''}" class="checkedAll2"/>&nbsp;
+                </td>
+                <td width="40%">${(_data.busCode)!''}</td>
+                <td >${(_data.busName)!''}</td>
+              </tr>
+            </thead>
+            <tbody>
+            <#if (datasqc??)&&(datasqc?size>0)>
+			 <#list datasqc as _sqcdata>
+              <#if "${(_sqcdata.busId)!''}" == "${(_data.id)!''}">
+              <tr >
+                <td  class="td-c-check">
+                  <#if "${(_sqcdata.type)!''}" == "1">
+                 	<input type="checkbox" checked="checked" name="items3"  value="${(_sqcdata.id)!''}" class="c-check"/>&nbsp;
+                  <#else>	 
+                  	<input type="checkbox"  name="items3"  value="${(_sqcdata.id)!''}" class="c-check"/>&nbsp;
+                  </#if>
+                </td>
+                <td>
+                	${(_sqcdata.feeCode)!''}
+                </td>
+                <td>${(_sqcdata.goodsName)!''}</td>
+               
+              </tr>
+              </#if>
+             </#list>
+			</#if>
+            </tbody>
+          </table>
+         </td>
+      </tr>
+      </#list>
+	</#if> 
+    </tbody>
+  </table>
+  <!-- 分页 -->
+  		<#if returnDatas.page??>
+			<@h.pagetoolbar page=returnDatas.page formId='searchForm' />
+		</#if>
+ </form> 
+<script type="text/javascript" src="${ctx}/js/sinova/specialQrcode/specialqrcode.js"></script>
+<script>
+$(function(){
+	$("#table1  .tb_content_con tbody ").hide();
+	$(" .tb_content_con thead tr td").click(function(){
+		$(this).parents(".tb_content_con").find("tbody").toggle();
+		$(this).parents(".tb_content_con ").find(".td-p-check span").toggleClass("open");
+		})
+	})
+	//业务全选全不选
+	$("#table1  .tb_content_con thead .checkedAll2").click(function(e){
+		e.stopPropagation(); 
+		var obj=$("#table1  .tb_content_con thead .checkedAll2");
+		var obj1=$("#table1  .tb_content_con thead input.checkedAll2[type=checkbox]:checked");
+		if(this.checked){
+		
+			$(this).parents(".tb_content_con").find("tbody input[type=checkbox]").prop("checked",true);
+			if(obj.length==obj1.length){
+				$(".j-checkedAll").prop("checked",true);
+				}
+			}
+			else{
+			if(obj.length!=obj1.length){
+				$(".j-checkedAll").prop("checked",false);
+				}
+			$(this).parents(".tb_content_con").find("tbody input[type=checkbox]").prop("checked",false);}
+	})
+	//档次选择，判断业务，判断全选
+	 $("#table1  .tb_content_con tbody .c-check").click(function(){
+		 obj=$(this).parents(".tb_content_con").find("input[type=checkbox]");
+		 obj2=$(this).parents(".tb_content_con").find(" tbody input[type=checkbox]:checked");
+		 var obj_two=$("#table1  .tb_content_con thead .checkedAll2");
+		var obj_two1=$("#table1  .tb_content_con thead input.checkedAll2[type=checkbox]:checked");
+			if(obj2.length==0){
+				$(this).parents(".tb_content_con").find(" thead input[type=checkbox]").prop("checked", false );
+				
+				obj[0].indeterminate = false}
+			else if(obj2.length==obj.length-1){
+				$(this).parents(".tb_content_con").find("thead input[type=checkbox]").prop("checked", true );
+				obj[0].indeterminate = false;
+				if(obj_two.length=obj_two1.length){	$(".j-checkedAll").prop("checked", true );}}
+			else {
+				obj[0].indeterminate = true;
+				$(".j-checkedAll").prop("checked", false );}
+	})
+	
+//全选
+$(function(){     
+     $(".j-checkedAll").click(function(){
+     var obj =$("#table1").find('.checkedAll2');
+		if(this.checked){
+			$("#table1").find('.checkedAll2').attr("checked", true );
+			$("#table1").find('.c-check').attr("checked", true );
+			
+			for(i=0;i<obj.length;i++){
+			obj[i].indeterminate = false;}
+		}else{		
+			$("#table1").find('.checkedAll2').attr("checked", false );						
+			$("#table1").find('.c-check').attr("checked", false );
+			for(i=0;i<obj.length;i++){
+			obj[i].indeterminate = false;}
+		}
+	 });
+})
+//页面加载，设置多选框状态
+$(function(){
+		$("#table1  .tb_content_con tbody .c-check").each(function(){
+			 obj=$(this).parents(".tb_content_con").find("input[type=checkbox]");
+			 obj2=$(this).parents(".tb_content_con").find(" tbody input[type=checkbox]:checked");
+				if(obj2.length==0){
+					$(this).parents(".tb_content_con").find(" thead input[type=checkbox]").prop("checked", false );
+					obj[0].indeterminate = false
+				}else if(obj2.length==obj.length-1){
+					$(this).parents(".tb_content_con").find("thead input[type=checkbox]").prop("checked", true );
+					obj[0].indeterminate = false
+				}else {
+					obj[0].indeterminate = true
+				}
+		});
+		
+		if( $("#table1 .checkedAll2").length==$("#table1 input.checkedAll2[type=checkbox]:checked").length )
+		{
+		$(".j-checkedAll").prop("checked", true );}
+		else{$(".j-checkedAll").prop("checked", false );}
+	})
+</script>
+</div>
+<div id="cover" class="cover" ></div>
+<div style="width: 300px; " id="delete" class="pop">
+  <div class="popTitle"><span onclick="hide('cover','delete')" class="close fr"></span><strong class="font14 fl">提示</strong>
+    <div class="clear"></div>
+  </div>
+  <div class="mt25 mb25">
+    <p class="text_c">确定要删除吗？</p>
+  </div>
+  <div class="text_c mt10 mb10"><a onclick="hide('cover','delete');show('cover','deleteCg')" class="mr10 bt_blue" href="javascript:;"><span>确定</span></a><a onclick="hide('cover','delete')" class="mr10 bt_blue" href="javascript:;"><span>取消</span></a></div>
+</div>
+</body>
+</#escape>

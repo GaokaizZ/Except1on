@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<link rel="stylesheet" href="${ctx}/js/coms/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css"/>
+<script type="text/javascript" src="${ctx}/js/coms/ztree/js/jquery.ztree.all-3.5.js"></script>
+<script type="text/javascript">
+<!--
+	var menuTreesetting = {
+		callback: {
+			onClick:MenuzTreeOnClick
+		},
+		data : {
+			simpleData : {
+				enable : true,
+				idKey : "id",
+				pIdKey : "pid",
+				rootPId : "null"
+			}
+		}
+	};
+
+	$(document).ready(function() {
+		
+		jQuery.post("${ctx}/system/menu/list/json",
+			function(_json) {
+				if (_json.status == "success") {
+					$.fn.zTree.init($("#menuListTree"), menuTreesetting, _json.data);
+					
+					var zTree =$.fn.zTree.getZTreeObj("menuListTree");
+				    //zTree.expandAll(true);
+					
+				} else {
+					myalert(_json.message);
+				}
+			});
+	});
+	
+	function MenuzTreeOnClick(event, treeId, treeNode) {
+	    showdata(treeNode);
+	};
+	
+	function showdata(result) {
+		$("#updateForm select ").each(function() {
+			$(this).find('option:first').attr('selected', 'selected');
+		});
+		for (var s in result) {
+			set_val(s, result[s]);
+		}
+		
+		var _pid=result["pid"];
+		if((!_pid)||_pid==null||_pid=="null"||_pid==""){
+			jQuery("#pid").val("");
+		}else{
+			jQuery("#pid").val(_pid);
+		}
+		
+		
+		var _pNode= result.getParentNode();
+		if(_pNode){
+			jQuery("#pname").val(_pNode["name"]);
+		}else{
+			jQuery("#pname").val("");
+		}
+		
+	}
+	
+	function deleteMenu(){
+		var id=jQuery("#id").val();
+		if(!id||id==""){
+			alert("请选择你要删除的记录");
+			return;
+		}else{
+			var url="${ctx}/system/menu/delete?id="+id;
+			//var listurl="${ctx}/system/menu/list";
+			jQuery.post(url, "id=" + id, function(data){
+            alert("恭喜你，删除成功！");
+            $("#searchForm").attr("action","${ctx}/system/menu/list");
+            $("#searchForm").submit();
+        });
+		}
+	}
+	//跳转到添加页面
+function beforeAdd(){
+	var url = ctx + "/system/menu/gotoAdd";
+	$("#searchForm").attr("action",url);
+	$("#searchForm").submit();
+}
+//跳转到修改页面
+function beforeUpdate(){
+	var id = $("#id").val();
+	if(""==id){
+		alert("请先选择菜单！");
+		return;
+	}
+	var url = "${ctx}/system/menu/beforeUpdate";
+	$("#searchForm").attr("action",url);
+	$("#searchForm").submit();
+}
+//-->
+</script>
+<body class="bg_cff">
+<div class="bmBox">
+<div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp;<span>菜单管理</span></div>
+<form id="searchForm" name="searchForm"  action="${ctx}/system/menu/update"   method="post" class="well form-horizontal clearfix">
+<!--左边 开始-->
+<div class="fl bmLeft">
+	<!-- 菜单树 -->
+	<div onclick="showInfo()">
+		<ul id="menuListTree" class="ztree"></ul>
+	</div>
+</div>	
+<!--左边 结束-->
+<!--右边 开始-->
+<div class="mainBox mainBox_2">
+	<!--功能权限首页 开始-->
+	<div class="bord_gray padd_10 pb30 mt20 showInfo_1">
+        <p class="lineh40 borb font16"><span>菜单管理</span></p>
+        <p class="lineh20 mt20">请点击菜单树中的某个菜单，进行管理。</p> 
+        
+    </div>
+    
+    <div class="showInfo_2 bord_gray padd_10 pb30 mt20 undis">
+	 <p class="lineh40 borb font16"><span>菜单管理</span></p>
+    <div class="lineh30 mt15">
+    	<a href="javascript:;" class="mr10 bt_blue" onclick="beforeAdd();"><span>添加</span></a>
+    	<a href="javascript:;" class="mr10 bt_blue" onclick="beforeUpdate();"><span>编辑</span></a>
+    	<a href="javascript:;" class="bt_blue ml10" onclick="deleteMenu();"><span>删除</span></a>
+    </div>
+     <div class="mt10">
+          <p class="fl leftName middle"><span class="red">*</span>名称</p>
+          <div class="fl rightInfo rightInfo_2 middle">
+            <input type="text" class="text_1" id="name" name="name"  readonly="readonly"/>
+             <input type="hidden" class="text_1" id="id" name="id"  readonly="readonly"/>
+          </div>
+          <div class="clear"></div>
+        </div>
+        <!--功能名称 结束-->
+        <!--显示图标 开始-->
+        <div class="mt10">
+          <p class="fl leftName middle"><span class="red">*</span><span>地址：</span></p>
+          <div class="fl rightInfo rightInfo_2 middle">
+            <input type="text" class="text_1" id="pageurl" name="pageurl" readonly="readonly" />
+          </div>
+          <div class="clear"></div>
+        </div>
+        <!--显示图标 结束-->
+        <div class="mt10">
+      <p class="fl leftName middle">父节点：</p>
+      <div class="fl rightInfo middle">
+        <input type="text" class="text_1" name="pname"  id="pname" type="text"   readonly="readonly"/>
+      </div>
+      <div class="clear"></div>
+    </div>
+        <!--顺序值 开始-->
+        <div class="mt10 gnSXYC">
+          <p class="fl leftName middle"><span class="red">*</span><span>资源类型：</span></p>
+          <div class="fl rightInfo rightInfo_2 middle">
+           <select   name="type" id="type" class="form-control">
+				<option  value="0">按钮资源</option>
+				<option value="1">导航菜单</option>
+			</select>
+          </div>
+          <div class="clear"></div>
+        </div>
+        <!--顺序值 结束-->
+         <!--顺序值 开始-->
+        <div class="mt10 gnSXYC">
+          <p class="fl leftName middle"><span class="red">*</span><span>排序：</span></p>
+          <div class="fl rightInfo rightInfo_2 middle">
+            <input type="text" class="text_1" id="sort" name="sort"  readonly="readonly"/>
+          </div>
+          <div class="clear"></div>
+        </div>
+        <!--顺序值 结束-->
+         <!--顺序值 开始-->
+        <div class="mt10 gnSXYC">
+          <p class="fl leftName middle"><span class="red">*</span><span>是否有效：</span></p>
+          <div class="fl rightInfo rightInfo_2 middle">
+           <select   name="state" id="state" class="form-control">
+				<option  value="1">是</option>
+				<option value="0">否</option>
+			</select>
+          </div>
+          <div class="clear"></div>
+        </div>
+        <!--顺序值 结束-->
+        
+          <!--顺序值 开始-->
+        <div class="mt10 gnSXYC">
+          <p class="fl leftName middle">备注<span>：</span></p>
+          <div class="fl rightInfo rightInfo_2 middle">
+         <textarea cols="60" rows="10" name="remark"  id="remark" readonly="readonly"></textarea>
+          </div>
+          <div class="clear"></div>
+        </div>
+        <!--顺序值 结束-->
+      </div>
+   
+    </div>
+ </form>   
+    </div>
+    <!--功能权限首页 结束-->
+<!--右边 结束-->
+<div class="clear"></div>
+
+</body>
+<script type="text/javascript">
+	function showInfo(){
+		$(".showInfo_1").hide();
+		$(".showInfo_2").show();
+		$(".newGN").hide();
+	}
+	function newpg(){
+		$(".showInfo_2").hide();
+		$(".newGN").show();
+	}
+	
+
+</script>
+
+</#escape>

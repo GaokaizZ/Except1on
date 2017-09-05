@@ -1,0 +1,121 @@
+<#escape x as x?html>
+
+<script type="text/javascript" src="${ctx}/js/sinova/qrcodebusiness/qrcodebusiness.js"></script>
+
+<div class="operate panel panel-default" style="height:65px;">
+	<div class="panel-body">
+		<div class="pull-left">
+			<form class="form-horizontal" id="searchForm" name="searchForm" action="${ctx}/qrcodebusiness/list" method="post">
+				<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+				<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+				<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+				
+				
+				<label for="qrcodeId"><b>二维码ID:</b></label>
+				<input type="text" id="qrcodeId_" name="qrcodeId" value="${(qrcodeBusiness.qrcodeId)!''}" class="inp_2"/>
+		        
+				
+				<label for="busId"><b>业务ID:</b></label>
+				<input type="text" id="busId_" name="busId" value="${(qrcodeBusiness.busId)!''}" class="inp_2"/>
+		        
+				
+				<label for="feeCode"><b>资费代码:</b></label>
+				<input type="text" id="feeCode_" name="feeCode" value="${(qrcodeBusiness.feeCode)!''}" class="inp_2"/>
+		        
+			   	
+			   	<a href="javascript:mySubmitForm('searchForm');" class="btn btn-purple btn-sm">
+					查询 <i class="ace-icon fa fa-search icon-on-right bigger-10"></i>
+				</a>
+			</form>
+		</div>
+
+		<div class="pull-right">
+			<@shiro.hasPermission name="/qrcodebusiness/update" >
+			<button onclick="commonSaveForm('updateForm','${ctx}/qrcodebusiness/list');" class="btn  btn-sm  btn-primary">
+				添加
+			</button>
+			<button onclick="commonUpdateForm('updateForm','${ctx}/qrcodebusiness/list');" class="btn  btn-sm  btn-primary">
+				修改
+			</button>
+			</@shiro.hasPermission>
+			
+			<@shiro.hasPermission name="/qrcodebusiness/delete" >
+			<button onclick="deleteQrcodeBusiness();" class="btn btn-sm  btn-danger">
+				 删除
+			</button>
+			</@shiro.hasPermission>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-4 sub_left_menu ">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>二维码ID</th>
+					<th>业务ID</th>
+					<th>资费代码</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			<#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+			
+				<#list returnDatas.data as _data>
+						<tr id="${(_data.id)!''}">
+						
+							<td>
+									${(_data.qrcodeId)!''}
+							</td>
+							<td>
+									${(_data.busId)!''}
+							</td>
+							<td>
+									${(_data.feeCode)!''}
+							</td>
+						
+						</tr>
+				</#list>
+			</#if>
+			</tbody>
+		</table>
+		
+		<#if returnDatas.page??>
+			<@h.pagetoolbar page=returnDatas.page formId='searchForm' />
+		</#if>
+	</div>
+	
+	<div class="col-sm-8 last sub_content">
+		<form class="well form-horizontal clearfix" id="updateForm" name="updateForm" action="${ctx}/qrcodebusiness/update" method="post">
+			<!--input hidden Start-->
+				<input type="hidden" id="id" name="id" />	
+			<!--input hidden End-->
+			
+				<div class="form-group col-xs-12">
+					<label class="col-sm-4 control-label" for="qrcodeId">二维码ID：</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="text" id="qrcodeId" name="qrcodeId" placeholder="二维码ID" />
+						</div>
+				</div>
+				<div class="form-group col-xs-12">
+					<label class="col-sm-4 control-label" for="busId">业务ID：</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="text" id="busId" name="busId" placeholder="业务ID" />
+						</div>
+				</div>
+				<div class="form-group col-xs-12">
+					<label class="col-sm-4 control-label" for="feeCode">资费代码：</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="text" id="feeCode" name="feeCode" placeholder="资费代码" />
+						</div>
+				</div>
+			
+		</form>
+	</div>
+		
+</div>
+
+</#escape>
+
+

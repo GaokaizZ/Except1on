@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<body class="bg_cff">
+<div class="mainBox">
+<div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp;<span>日志查看</span></div>
+    <div class="mt10 mb10"><a  href="javascript:history.go(-1)" class="mr10 bt_blue"><span>返回</span></a></div>
+    <div class="bord_gray padd_10 pb30">
+        <!--所属应用 开始-->
+        <div class="mt10">
+        	<p class="fl leftName middle"><span>用户：</span></p>
+          <div class="fl rightInfo lineh20">${(fwlog.userCode)!''}</div>
+            <div class="clear"></div>
+        </div>
+        <!--所属应用 结束-->
+        <!--操作用户 开始-->
+        <div class="mt10">
+        	<p class="fl leftName middle"><span>中文名：</span></p>
+          <div class="fl rightInfo lineh20">${(fwlog.userName)!''}</div>
+            <div class="clear"></div>
+        </div>
+        <!--操作用户 结束-->
+        <!--操作实体 开始-->
+        <div class="mt10">
+        	<p class="fl leftName middle"><span>ip：</span></p>
+            <div class="fl rightInfo lineh20">${(fwlog.ip)!''}</div>
+            <div class="clear"></div>
+        </div>
+        <!--操作实体 结束-->
+        <!--操作名称 开始-->
+        <div class="mt10">
+        	<p class="fl leftName middle"><span>时间：</span></p>
+            <div class="fl rightInfo lineh20">${(fwlog.strDate)!''}</div>
+            <div class="clear"></div>
+        </div>
+        <!--操作名称 结束-->
+        <!--操作URL 开始-->
+        <div class="mt10">
+        	<p class="fl leftName middle">菜单名称：</p>
+            <div class="fl rightInfo lineh20">${(fwlog.menuName)!''}</div>
+            <div class="clear"></div>
+      </div>
+        <!--操作URL 结束-->
+        <!--服务器IP地址 开始-->
+        <div class="mt10">
+        	<p class="fl leftName middle"><span>访问URL：</span></p>
+            <div class="fl rightInfo lineh20">${(fwlog.fwUrl)!''}</div>
+            <div class="clear"></div>
+      </div>
+        <!--服务器IP地址 结束-->
+      
+    </div>
+    <div class="mt10 mb10"><a  href="javascript:history.go(-1)" class="mr10 bt_blue"><span>返回</span></a></div>
+</div>
+</body>
+</#escape>

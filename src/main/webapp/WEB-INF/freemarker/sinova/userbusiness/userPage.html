@@ -1,0 +1,38 @@
+<#escape x as x?html>
+
+<div class="row">
+	<div class="col-xs-12">
+		<div class="col-sm-4 sub_left_menu ">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>账号</th>
+						<th>姓名</th>
+						<th>工号</th>
+						<th>是否有效</th>
+					</tr>
+				</thead>
+				<tbody>
+			    <#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+				   <#list returnDatas.data as _data>
+
+						<tr id="${(_data.id)!''}">
+							<td>${(_data.account)!''}</td>
+							<td>${(_data.name)!''}</td>
+							<td>${(_data.workno)!''}</td>
+							<td>${(_data.state)!''}</td>
+						</tr>
+                        </#list>
+				 </#if>
+				</tbody>
+			</table>
+		</div>
+		<!-- /.span -->
+	
+		<#if returnDatas.page??> 
+			<@h.pagetoolbar page=returnDatas.page formId='searchForm' />
+		</#if>
+	</div>
+	
+</div>
+</#escape>

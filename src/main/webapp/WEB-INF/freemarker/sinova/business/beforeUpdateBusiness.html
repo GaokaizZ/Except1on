@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="${ctx}/js/sinova/business/business.js"></script>
+  
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route">二维码直通车&nbsp;&gt;&nbsp;<span>业务管理编辑</span></div>
+  <div class="mt10 mb10">
+  	<a class="mr10 bt_blue"  href="${ctx}/business/list"><span>返回</span></a>
+  	<a class="mr10 bt_blue" href="javascript:resetVal2('edit');"><span>重置</span></a>
+  	<@shiro.hasPermission name="/business/update" >
+  	<a onclick="checkForm('1');" class="mr10 bt_blue" href="javascript:void(0);"><span>修改</span></a>
+  	</@shiro.hasPermission>
+  </div>
+  <div class="bord_gray padd_10 pb30">
+   <form id="searchForm" name="searchForm" action="${ctx}/business/update" method="post">
+	<input type="hidden" id="idTemp" name="idTemp" value="${(business.id)!''}" />
+    <input type="hidden" id="id" name="id" value="${(business.id)!''}" />	
+	<input  type="hidden" id="upDown" name="upDown" value="${(business.upDown)!''}" />
+	<input  type="hidden" id="state" name="state" value="${(business.state)!''}" />
+    <!--订单归属 开始-->
+    <div class="mt10">
+      <p class="fl leftName middle">业务编号： </p>
+      <div class="fl rightInfo middle">
+        <input type="text" class="text_1" id="busCode" name="busCode" value="${(business.busCode)!''}" readonly="true"/>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <!--订单归属 结束-->
+    <!--手机型号 开始-->
+    <div class="mt10">
+      <p class="fl leftName middle">业务名称：</p>
+      <div class="fl rightInfo middle">
+        <input type="text" class="text_1" id="busName" name="busName" value="${(business.busName)!''}" maxlength="100"/>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <!--手机型号 结束-->
+    <!--手机颜色 开始-->
+    <div class="mt10">
+      <p class="fl leftName middle">业务类型：</p>
+      <div class="fl rightInfo middle">
+        <select id="busType" name="busType">
+          <option value="" >请选择</option>
+			<#if (BusTypes??)&&(BusTypes?size>0)>
+				<#list BusTypes as _data>
+					<#if _data.remark == business.busType>
+					<option value="${(_data.remark)!''}" selected="selected">${(_data.name)!''}</option>
+					<#else>
+					<option value="${(_data.remark)!''}" >${(_data.name)!''}</option>
+					</#if>
+		        </#list>
+		    </#if>
+        </select>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <!--手机颜色 结束-->
+   
+    <!--联系人姓名 开始-->
+    <div class="mt10">
+      <p class="fl leftName middle">默认酬金：</p>
+      <div class="fl rightInfo middle">
+        <input type="text" class="text_1" id="defaultReward" name="defaultReward" value="${(business.defaultReward)!''}" maxlength="8"/>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <!--联系人姓名 结束-->
+    
+    <!--开始-->
+    <div class="mt10">
+      <p class="fl leftName middle">备注：</p>
+      <div class="fl rightInfo middle">
+        <textarea  rows="5" cols="80" id="remark" name="remark">${(business.remark)!''}</textarea>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <!--结束-->
+     <!-- <div class="mt10">
+      <p class="fl leftName middle">排序：</p>
+      <div class="fl rightInfo middle">
+        <input type="text" class="text_1"/>
+      </div>
+      <div class="clear"></div>
+    </div> -->
+    </form>
+  </div>
+  <!--按钮 开始-->
+  <div class="mt10 mb10">
+  	<a class="mr10 bt_blue"  href="${ctx}/business/list"><span>返回</span></a>
+  	<a class="mr10 bt_blue" href="javascript:resetVal2('edit');"><span>重置</span></a>
+  	<@shiro.hasPermission name="/business/update" >
+  	<a onclick="checkForm('1');" class="mr10 bt_blue" href="javascript:void(0);"><span>修改</span></a>
+  	</@shiro.hasPermission>
+  </div>
+  <!--按钮 结束-->
+</div>
+
+</body>
+
+</#escape>

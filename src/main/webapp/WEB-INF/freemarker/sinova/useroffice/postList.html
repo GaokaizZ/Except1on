@@ -1,0 +1,17 @@
+<input type="hidden" id="records" name="records" value="${id}"/>
+<table class="text_c">
+	<tbody>
+		<#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+			<#list returnDatas.data as _data>
+				<tr>
+					<td>
+						<input name="check_lip"  type="radio" value="${(_data.code)!''}" />
+					</td>
+					<td>
+						${(_data.name)!''}
+					</td>
+				</tr>
+			</#list>
+		</#if>
+	</tbody>	
+</table>

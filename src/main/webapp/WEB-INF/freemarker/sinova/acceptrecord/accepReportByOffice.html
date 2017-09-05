@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<script type="text/javascript" src="${ctx}/plugin/my97/WdatePicker.js"></script>
+<script type="text/javascript" src="${ctx}/js/sinova/acceptrecord/acceptrecord.js"></script>
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>营业员受理报表</span></div>
+  <form id="searchForm" name="searchForm" action="${ctx}/acceptrecord/listReportByOffice" method="post">
+		<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+		<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+		<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+		<input type="hidden" name="feeCode" id="feeCode" value="${(feeCode)!'id'}" />
+		<input type="hidden" name="busId" id="busId" value="${(busId)!'id'}" />
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tb_searchbox mt20 bord_gray">
+    <tr>
+      <td>
+   		 受理开始时间：
+        <input class="input_normal w160" type="text" id="beginTime_" name="beginTime" readonly="readonly"  onfocus="selectTime();"
+				onclick="WdatePicker({el:'beginTime_',dateFmt:'yyyy-MM-dd'})" 
+				value="${((beginTime)?string('yyyy-MM-dd'))!'' }"/>
+		受理结束时间：
+        <input class="input_normal w160" type="text" id="endTime_" name="endTime" readonly="readonly" onfocus="WdatePicker({el:'endTime_',maxDate:'%y-%M-%d',minDate:'#F{$dp.$D(\'beginTime_\')}'})"
+				onclick="WdatePicker({el:'endTime_',dateFmt:'yyyy-MM-dd'})" 
+				value="${((endTime)?string('yyyy-MM-dd'))!'' }"/>
+        <span class="mr20">
+	        <a href="javascript:mySubmitForm('searchForm','CL');" class="bt_blue"><span>查询</span></a>
+	        <a href="javascript:window.location.href='${ctx}/acceptrecord/listReportByRegion?regionCode=${(busId)}'" class="bt_blue"><span>返回</span></a>
+	    </span>
+	  </td>
+    </tr>
+  </table>
+	<p class="overflow mt10">
+  		<a class="bt_blue ml10 fr" href="javascript:void(0);" onclick="expSales('${(feeCode)!'id'}','${(busId)!'id'}');"><span>全部导出</span></a>
+  	</p>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mt15 tb_content1" style="border-collapse:collapse;empty-cells:hide">
+    <tr>
+
+      <th>地市名称 </th>
+      <th>营业厅名称</th>
+      <th>boss工号</th>
+      <th>办理量</th>
+    </tr>
+     <#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+			
+				<#list returnDatas.data as _data>
+						<tr>
+
+							<td>
+									${(_data.account)!''}
+							</td>
+							<td>
+									${(_data.mobile)!''}
+							</td>
+							<td>
+									${(_data.hint)!''}
+							</td>
+							<td>
+									${(_data.ip)!0}
+									
+							</td>
+						</tr>
+				</#list>
+			</#if>
+  </table>
+<!-- 分页 -->
+  		<#if returnDatas.page??>
+			<@h.pagetoolbar page=returnDatas.page formId='searchForm' />
+		</#if>
+  </form>
+</div>
+
+
+</body>
+</#escape>

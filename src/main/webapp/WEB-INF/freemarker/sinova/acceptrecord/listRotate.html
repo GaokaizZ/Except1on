@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<script type="text/javascript" src="${ctx}/js/sinova/acceptrecord/acceptrecord.js"></script>
+<script type="text/javascript" src="${ctx}/plugin/my97/WdatePicker.js"></script>
+
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>抽奖记录</span></div>
+  <form id="searchForm" name="searchForm" action="${ctx}/acceptrecord/listRotate" method="post">
+		<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+		<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+		<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tb_searchbox mt20 bord_gray">
+    <tr>
+      <td>手机号码：
+        <input class="input_normal w160" type="text" id="mobile_" name="mobile" value="${(rotateDTO.mobile)!''}" />
+       	抽奖开始时间：
+        <input class="input_normal w160" type="text" id="beginTime_" name="beginTime" readonly="readonly"  onfocus="selectTime();"
+				onclick="WdatePicker({el:'beginTime_',dateFmt:'yyyy-MM-dd'})" 
+				value="${((rotateDTO.beginTime)?string('yyyy-MM-dd'))!'' }"/>
+		抽奖结束时间：
+        <input class="input_normal w160" type="text" id="endTime_" name="endTime" readonly="readonly" onfocus="WdatePicker({el:'endTime_',maxDate:'%y-%M-%d',minDate:'#F{$dp.$D(\'beginTime_\')}'})"
+				onclick="WdatePicker({el:'endTime_',dateFmt:'yyyy-MM-dd'})" 
+				value="${((rotateDTO.endTime)?string('yyyy-MM-dd'))!'' }"/>
+		<br/>
+		奖品：
+		<select id="prize" name="prize">
+		<option value="">全部</option>
+		<#if "${rotateDTO.prize!''}"== '0'>
+		<option value="0" selected="selected">未中奖</option>
+		<#else>
+		<option value="0">未中奖</option>
+		</#if>
+				<#if "${rotateDTO.prize!''}"== '1'>
+		<option value="1" selected="selected">一等奖</option>
+		<#else>
+		<option value="1" >一等奖</option>
+		</#if>
+				<#if "${rotateDTO.prize!''}"== '2'>
+		<option value="2" selected="selected">二等奖</option>
+		<#else>
+		<option value="2">二等奖</option>
+		</#if>
+				<#if "${rotateDTO.prize!''}"== '3'>
+		<option value="3" selected="selected">三等奖</option>
+		<#else>
+		<option value="3">三等奖</option>
+		</#if>
+				<#if "${rotateDTO.prize!''}"== '4'>
+		<option value="4" selected="selected">四等奖</option>
+		<#else>
+		<option value="4">四等奖</option>
+		</#if>
+				<#if "${rotateDTO.prize!''}"== '5'>
+		<option value="5" selected="selected">五等奖</option>
+		<#else>
+		<option value="5">五等奖</option>
+		</#if>
+				<#if "${rotateDTO.prize!''}"== '6'>
+		<option value="6" selected="selected">六等奖</option>
+		<#else>
+		<option value="6">六等奖</option>
+		</#if>
+				<#if "${rotateDTO.prize!''}"== '7'>
+		<option value="7" selected="selected">七等奖</option>
+		<#else>
+		<option value="7">七等奖</option>
+		</#if>
+				<#if "${rotateDTO.prize!''}"== '8'>
+		<option value="8" selected="selected">八等奖</option>
+		<#else>
+		<option value="8">八等奖</option>
+		</#if>
+				<#if "${rotateDTO.prize!''}"== '9'>
+		<option value="9" selected="selected">九等奖</option>
+		<#else>
+		<option value="9">九等奖</option>
+		</#if>
+       	 </select>
+       	 状态：
+       	 		<select id="state" name="state">
+       	 		<option value="">全部</option>
+       <#if "${rotateDTO.state!''}"== '0'>
+		<option value="0" selected="selected">未中奖</option>
+		<#else>
+		<option value="0">未中奖</option>
+		</#if>
+					<#if "${rotateDTO.state!''}"== '1'>
+		<option value="1" selected="selected">中奖</option>
+		<#else>
+	  <option value="1" >中奖</option>
+		</#if>
+					<#if "${rotateDTO.state!''}"== '3'>
+		<option value="3" selected="selected">超时</option>
+		<#else>
+		 <option value="3" >超时</option>
+		</#if>
+		
+       	 </select>
+       	 批次：
+       	 <select id="batCode" name="batCode">
+	        	<#if "${(rotateDTO.batCode)!''}"== '1'>
+		          	<option value="">全部</option>
+			       	<option value="1" selected="selected">1</option>
+			       	<option value="2">2</option>
+		       	<#elseif "${(rotateDTO.batCode)!''}"== '0'>
+			       	<option value="">全部</option>
+			      	<option value="1">1</option>
+			       	<option value="2" selected="selected">2</option>
+		       	<#else>
+			       	<option value="" >全部</option>
+			       	<option value="1">1</option>
+			  		<option value="2" selected="selected">2</option>
+		     	</#if>
+       	</select>
+       	 <span class="mr20"></span>
+        <span class="mr20">
+	        <a href="javascript:mySubmitForm('searchForm','CL');" class="bt_blue"><span>查询</span></a>
+	    </span>
+	  </td>
+    </tr>
+  </table>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mt15 tb_content1" style="border-collapse:collapse;empty-cells:hide">
+    <tr>
+    
+      <th>抽奖号码</th>
+      <th>奖品</th>
+      <th>状态</th>
+      <th>批次</th>
+      <th>抽奖时间</th>
+    </tr>
+     <#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+			
+				<#list returnDatas.data as _data>
+						<tr id="${(_data.id)!''}">
+							<td>
+									${(_data.mobile)!''}
+							</td>
+							<td>
+									${(_data.jinpin)!''}
+									
+							</td>
+							<td>
+									${(_data.stateS)!''}
+							</td>
+							<td>
+									${(_data.batCode)!''}
+							</td>
+							<td>
+									<!--日期型-->
+									${((_data.createTime)?string("yyyy-MM-dd HH:mm:ss"))!''}
+									
+							</td>
+						</tr>
+				</#list>
+			</#if>
+  </table>
+<!-- 分页 -->
+  		<#if returnDatas.page??>
+			<@h.pagetoolbar page=returnDatas.page formId='searchForm' />
+		</#if>
+  </form>
+</div>
+
+
+
+<!--弹出层-->
+<div class="cover" id="cover" ></div>
+<div style="width: 300px; " id="delete" class="pop">
+  <div class="popTitle"><span onclick="hide('cover','delete')" class="close fr"></span><strong class="font14 fl">提示</strong>
+    <div class="clear"></div>
+  </div>
+  <div class="mt25 mb25">
+    <p class="text_c">确定要删除选中记录吗？</p>
+  </div>
+  <div class="text_c mt10 mb10"><a onclick="hide('cover','delete');show('cover','deleteCg')" class="mr10 bt_blue" href="javascript:;"><span>确定</span></a><a onclick="hide('cover','delete')" class="mr10 bt_blue" href="javascript:;"><span>取消</span></a></div>
+</div>
+<div style="width: 300px; " id="deleteCg" class="pop">
+  <div class="popTitle"><a onclick="hide('cover','deleteCg')" class="close fr" href="javascript:;"></a><strong class="font14 fl">提示</strong>
+    <div class="clear"></div>
+  </div>
+  <div class="mt25 mb25">
+    <p class="text_c">删除成功！</p>
+  </div>
+  <div class="text_c mt10 mb10"><a onclick="hide('cover','deleteCg')" class="mr10 bt_blue" href="javascript:;"><span>确定</span></a></div>
+</div>
+
+</body>
+</#escape>

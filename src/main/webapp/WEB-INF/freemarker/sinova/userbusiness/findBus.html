@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="${ctx}/js/sinova/userbusiness/userbusiness.js"></script>
+
+<script type="text/javascript" >
+jQuery(document).ready(function(){
+	$("#ids").click(function(){
+		if($(this).prop("checked")){
+			$("input[name='check_li']").each(function(){ 
+				 $(this).prop("checked","true");
+			}) 
+		}else{
+			$("input[name='check_li']").each(function(){ 
+				$(this).removeAttr("checked");
+			}) 
+		}
+	});
+	
+	$("input[name='check_li']").click(function(){
+		var flag=$(this).prop("checked");
+		//alert($(this).prop("checked"));
+		if(flag){
+			flag=checkCheckBox(flag);
+			if(flag){
+				$("#ids").prop("checked","true");
+			}
+		}else{
+			$("#ids").removeAttr("checked");
+		}
+	});
+});
+
+function checkCheckBox(flag) {
+	if(flag){
+		$("input[name='check_li']").each(function(){
+			if(!$(this).prop("checked")){
+				return flag=false;
+			}
+		})
+	}else{
+		$("input[name='check_li']").each(function(){
+			if($(this).prop("checked")){
+				return flag=true;
+			}
+		})
+	}
+	return flag;
+}
+</script>
+
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>用户业务管理</span></div>
+  <form id="searchForm" name="searchForm" action="${ctx}/userbusiness/buslist?userId=${(userBusiness.userId)!''}" method="post">
+		<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+		<!-- <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" /> -->
+		<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+		<input type="hidden" name="userId" id="userId" value="${userId!''}" />
+		<input type="hidden" name="flag" id="flag" value="findBus" />
+  
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tb_searchbox mt20 bord_gray">
+    <tr>
+      <td>用户账号：
+        <input class="input_normal w160" id="account_" name="account" value="${(account)!''}" readonly="readonly"/>
+      	业务编号：<input class="input_normal w160" id="busCode" name="busCode" value="${(busCode)!''}" />
+      	业务名称：<input class="input_normal w160" id="busName" name="busName" value="${(busName)!''}" />
+      	<span class="mr20"><a href="javascript:mySubmitForm('searchForm','CL');" class="bt_blue"><span>查询</span></a></span>
+      	<span><a href="javascript:resetVal2();" class="bt_blue"><span>重置</span></a></span>
+      </td>
+    </tr>
+  </table>
+  <p class="overflow mt10">
+  	<@shiro.hasPermission name="/userbusiness/savebus" >
+  	<a href="javascript:void(0);" onclick="save('${(userBusiness.userId)!''}', $('#busIds').val())" class="ml10 fr bt_blue"><span>添加业务</span></a>
+  	</@shiro.hasPermission>
+  	<a href="javascript:void(0);" onclick="goBusList();" class="ml10 fr bt_blue"><span>返回</span></a>
+  </p>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mt15 tb_content1">
+    <tr>
+      <th width="30"><input class="checkedAll" type="checkbox"  name="items" id="ids" /></th>
+      <th>业务编号 </th>
+      <th>业务名称</th>
+      <th>上下架</th>
+    </tr>
+    <#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+		<#list returnDatas.data as _data>
+			<tr id="${(_data.id)!''}">
+				<td>
+					<input name="check_li"   type="checkbox" value="${(_data.id)!''}" />
+				</td>
+				<td>
+					<label>${(_data.busCode)!''}</label>
+				</td>
+				<td>
+					${(_data.busName)!''}
+				</td>
+				<td>
+				 	<#if "${(_data.upDown)!''}"= '1'>
+						已上架&nbsp;&nbsp;
+				 	<#elseif "${(_data.upDown)!''}"= '0'>
+				 		已下架&nbsp;&nbsp;
+				 	</#if>
+				</td>
+			</tr>
+		</#list>
+	</#if>
+  </table>
+  		<!-- 分页 -->
+  		<#if returnDatas.page??>
+			<@h.pagetoolbar page=returnDatas.page formId='searchForm' />
+		</#if>
+	</form>
+	</div>
+</body>
+
+</#escape>
+
+

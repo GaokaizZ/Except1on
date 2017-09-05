@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+		<@h.head />
+		
+<script type="text/javascript">
+$(function(){ var i=1;
+	   $(".jxtj").click(function(){
+		   if($(".j-addewm").length>8){
+		   		alert("最多添加10个");
+		   }else{
+		   		$(".jxtjbox").append("<span class='j-addewm'><br/>网址名称： <input class='input_normal w160' maxlength='10' name='addrName' id='addrName_'> 链接地址： <input class='input_normal w160' maxlength='500' name='urlName' id='urlName_'> <a class='cF0860C j-delete' href='javascript:;'><span>删除</span></a></span>")}
+		   })
+							  
+$(document).on("click", ".j-delete",function(){ 
+	$(this).parents(".j-addewm").remove();
+	})
+})
+		   
+var a=1;
+	function otherQrcode(){
+	if(a==1){
+		a=0;
+		var addrName = "";
+		var straddr =document.getElementsByName("addrName");
+		for (var i = 0, j = straddr.length; i < j; i++){
+			var str = straddr[i].value;
+			if(str==null||str==""){
+				alert('网址名称中不能有空的!');
+				a=1;
+       			return;
+			}
+			 addrName += straddr[i].value + ",";
+		}
+		addrName = addrName.substring(0, addrName.length-1);
+		var exUrl = "";
+		var strurl =document.getElementsByName("urlName");
+		var reg = /^(http:\/\/)/i;
+		for (var i = 0, j = strurl.length; i < j; i++){
+			var str1 = strurl[i].value;
+			if(str1==null||str1==""){
+				alert('链接地址中不能有空的!');
+				a=1;
+       			return;
+			}
+			 if(!reg.test(str1)){
+				alert('输入不合法，请输入格式如：http://www.baidu.com');
+				a=1;
+				return;
+			}
+			exUrl += strurl[i].value + ",";
+		}
+		exUrl = exUrl.substring(0, exUrl.length-1);
+		var exName =jQuery("#qrcodeName_").val();
+		
+		if(exName==null||exName==""){
+			alert('二维码名称不能为空!');
+			a=1;
+       		return;
+		}
+		
+		jQuery.post(ctx + "/qrcode/otherQrcodeAdd",{qrcodeName:exName,urlName:exUrl,addrName:addrName},
+			function(_json) {
+				if (_json.status == "success") {
+					var path =_json.data;
+					a=1;
+					jQuery("#qrcodePic").attr("src",ctx+path);
+				} else {
+					a=1;
+					alert(_json.message);
+				}
+		});
+		}else{
+			alert("不能重复提交");
+		}
+	}
+</script>
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route"><span>二维码</span>&nbsp;&gt;&nbsp; <span>批量外链二维码生成</span></div>
+  <table width="100%" cellspacing="0" cellpadding="0" border="0" class="tb_searchbox mt20 bord_gray">
+    <tbody>
+      <tr>
+        <td><div class="jxtjbox"><span >
+            网址名称：
+            <input class="input_normal w160 " maxlength="10" name="addrName" id="addrName_"/>
+            链接地址：
+            <input class="input_normal w160" maxlength="500" name="urlName" id="urlName_"/>
+            </span> <span class="mr20"><a class="bt_blue jxtj" href="javascript:;"><span>继续添加</span></a></span> </div>
+          二维码名称：
+          <input class="input_normal w160" name="qrcodeName" id="qrcodeName_" value="" maxlength="16"/>
+          <span class="mr20"><a class="bt_blue" href="javascript:otherQrcode();"><span>生成</span></a></span></td>
+      </tr>
+    </tbody>
+  </table>
+  <p class=" pl30 mt10">二维码：<br />
+    <img class="mt10"  id="qrcodePic" name="qrcodePic" src="${ctx}/images/1.jpg"/> </p>
+</div>
+</body>
+</#escape>

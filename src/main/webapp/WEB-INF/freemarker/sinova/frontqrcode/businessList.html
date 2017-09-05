@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>${(tname)!''}</title>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="description" itemprop="description" content="${tname}" />
+<meta itemprop="name" content="${tname}" />
+<meta itemprop="image" content="${ctx}/images/share/logo.png" />
+<link rel="stylesheet" href="${ctx}/css/frontqrcode/ty.css" />
+<style>
+ /*jyj20150430样式开始*/
+	.ty-comlist dt{height: auto;margin-right: 5px;position: relative;background:url(${ctx}/images/frontqrcode/jyj_icon.png) no-repeat right center;background-size: 10px auto;}
+	.ty-comlist dt .icon {text-align: right;width:1px;padding-left: 15px;position: absolute;left: 0;}
+	.ty-comlist dt .title{padding-left: 50px;font-size: 16px;padding-bottom: 15px;}
+ /*jyj20150430样式结束*/
+</style>
+</head>
+<body style="background:#fff">
+<img src="${ctx}/images/share/logo.png" height="0" width="0">
+<form action="${ctx}/qrcodedealing/businessDetail" method="post" id="submitForm">
+<div class="ty-phone">
+  <div class="ty-screenwrap">
+  <div class="ty-screen show" data-href="">
+      <div class="ty-screen-content">
+  	<header>
+		<div>
+		<img src="${ctx}/images/img/logo.png" alt="logo" title="中国移动" class="fn-left" width="196" height="36" />
+		<span class="fn-left">山西</span>
+		</div>
+	</header>
+	
+       
+  		 <div class="ty-comhead small">
+          <div class="title fn-clear">
+            <div class="j-call-prev back" onclick="upback();"> <em class="ty-comicon"></em> </div>
+            <span class="text">${(tname)!''}</span> <em class="ty-icon icon-net22"></em> </div>
+        </div>
+        <!-- 
+        <div class="sx-phonenum" ><span>18268818012,您好</span><em class="ty-comicon"></em></div>
+     	-->
+  
+        <div class="ty-comlist">
+          	<#if (goodsList??)&&(goodsList?size>0)>
+          		<#list goodsList?keys as _data>
+		          <dl class="me-list-net22">
+          			<dt class="j-call-current" data-rmcurrent=".ty-comlist dl">
+		              <div class="td icon"> <em class="ty-icon"></em> </div>
+		              <div class="td title">${(_data)!''}</div>
+		              <div class="td more"> <em class="ty-comicon"></em> </div>
+		            </dt>
+         			<#list goodsList[_data] as _data2>
+			            <dd class="j-call-next"  onclick="businessDetail('${(_data2.goodsId)!''}','${(_data2.busCode)!''}','${(_data2.goodsFeeCode)!''}','${(opId)!''}','${(_data2.busType)!''}');">
+			              <div class="td icon"> <em class="ty-icon"></em> </div>
+			              <div class="td title">
+			              <#if _data2.goodsName?length lt 11>
+			              	 ${(_data2.goodsName)!''}
+			              <#else>
+			              	${_data2.goodsName[0..8]?default("")}...
+			              </#if>
+			             
+			              
+			              </div>
+			              <div class="td more"> <em class="ty-comicon"></em> </div>
+			            </dd>
+		        	</#list>
+	        	  </dl>
+          		</#list>
+          	</#if>
+          	<#if (goodsList2??)&&(goodsList2?size>0)>
+          		<#list goodsList2?keys as _data>
+		          <dl class="me-list-net22">
+          			<dt class="j-call-next" onclick="businessDetail2('${goodsList2[_data]}','${(opId)!''}','200','${(param)!''}');">
+		              <div class="td icon"> <em class="ty-icon"></em> </div>
+		              <div class="td title">${(_data)!''}</div>
+		             <!--  <div class="td yxhd-more"> <em class="ty-comicon"></em> </div> -->
+		            </dt>
+	        	  </dl>
+          		</#list>
+          	</#if>
+        </div>
+        <input type="hidden" id="opId" name="opId" value=""/>
+        <input type="hidden" id="goodsId" name="goodsId" value=""/>
+        <input type="hidden" id="busCode" name="busCode" value=""/>
+        <input type="hidden" id="feeCode" name="feeCode" value=""/>
+        <input type="hidden" id="busType" name="busType" value=""/>
+        <input type="hidden" id="param" name="param" value="${(param)!''}"/>
+        
+        <div class="ty-phonenum-place"></div>
+      </div>
+    </div>
+</div>
+</div>
+</form>
+<script src="${ctx}/js/sinova/frontqrcode/zepto-min.js"></script> 
+<script src="${ctx}/js/sinova/frontqrcode/ty.js"></script>
+<script src="${ctx}/js/sinova/frontqrcode/business.js"></script>
+<script src="${ctx}/js/coms/common/jquery-jtemplates.js"></script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript">
+	function addDicData(){
+		var typekey = "${typekey}";
+		var code = $("#code").val();
+		var name = $("#name").val();
+		var state = $("#state").val();
+		var remark = $("#remark").val();
+		var obj = document.getElementsByName("uploadFile")[0];
+		var reg = new RegExp("^[A-Za-z0-9]*$");
+		var reg2 = /^(\w|[\u4E00-\u9FA5])+$/;
+		
+		if(code==""){
+			alert("编码不能为空！");
+			return;
+		}
+		if(!reg.test(code)){
+			alert("编号只能输入数字和字母!");
+			return;
+		}
+		if(name==""){
+			alert("名称不能为空！");
+			return;
+		}
+		if(!reg2.test(name)){
+			alert("名称包含非法字符！");
+			return;
+		}
+		if(remark==""){
+			alert("描述不能为空！");
+			return;
+		}
+		if(!reg.test(remark)){
+			alert("描述只能输入数字和字母!");
+			return;
+		}
+		if (obj!=null) {
+			var str = obj.value;
+			if (str != null && str != "") {
+				var imgname = str.substring(str.lastIndexOf(".")+1).toUpperCase();
+				if(imgname != "JPG" && imgname != "GIF" && imgname != "PNG"){
+					alert('图片必须是gif或jpg,png格式!');
+					return;
+				}
+			}
+		}
+		
+		var url = "${ctx}/system/dicdata/${typekey}/update";
+		
+		$('#dicdataForm').ajaxSubmit({
+			url:url,
+			type:"post",
+			//data:{"code":code,"name":name,"state":state,"remark":remark,"typekey":typekey},
+			dataType:"json",
+			success:function(msg){
+				if(msg.status=="success"){
+					alert("添加成功！");
+					window.location.href = "${ctx}/system/dicdata/${typekey}/list";
+				}else{
+					alert("添加失败！");
+				}
+			},
+			error:function(){
+				alert("系统异常！请稍后再试！");
+			}
+		});
+	}
+	
+	function resetVal(){
+		$("#code").val("");
+		$("#name").val("");
+		$("#state").val("1");
+		$("#remark").val("");
+	}
+	
+	function setImagePreview(file) {  
+		var obj = document.getElementsByName("uploadFile")[0];
+		var str = obj.value;
+		if (str != null && str != "") {
+			var imgname = str.substring(str.lastIndexOf(".")+1).toUpperCase();
+			if(imgname != "JPG" && imgname != "GIF" && imgname != "PNG"){
+				alert('图片必须是gif或jpg,png格式!');
+				return false;
+			}
+		}
+	
+	    var imgObjPreview=document.getElementById("preciew");  
+	    if(file.files && file.files[0]){  
+	        //火狐下，直接设img属性  
+	        imgObjPreview.style.display = 'block';  
+	        imgObjPreview.style.width = '110px';  
+	        imgObjPreview.style.height = '110px';                      
+	        //imgObjPreview.src = docObj.files[0].getAsDataURL();  
+	          
+	        //火狐7以上版本不能用上面的getAsDataURL()方式获取，需要一下方式    
+	        imgObjPreview.src = window.URL.createObjectURL(file.files[0]); 
+	    }else{  
+	        //IE下，使用滤镜  
+	        file.select();  
+	        var imgSrc = file.value;  
+	        //必须设置初始大小  
+	        imgObjPreview.style.width = "110px";  
+	        imgObjPreview.style.height = "110px";  
+	        //图片异常的捕捉，防止用户修改后缀来伪造图片  
+	        try{  
+	            imgObjPreview.style.filter="progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";  
+	            imgObjPreview.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;  
+	        }catch(e){  
+	            alert("IE浏览器请在工具-Internet选项-安全-自定义中设置允许本地路径");   
+	            return false;  
+	        }  
+	        document.selection.empty();  
+	    }  
+	    return true;  
+	}
+</script>
+
+<body class="bg_cff">
+<div class="mainBox">
+<div class="route">
+	<span>二维码直通车</span>&nbsp;&gt;&nbsp;
+	<span>
+		<#if typekey == 'bustype'>
+  		业务类型管理
+  		<#elseif typekey == 'post'>
+  		岗位管理
+  		</#if>
+	</span>
+</div>
+    <div class="mt10 mb10">
+    	<a  href="${ctx}/system/dicdata/${typekey}/list" class="mr10 bt_blue"><span>返回</span></a>
+    	<a class="mr10 bt_blue" href="javascript:resetVal();"><span>重置</span></a>
+    	<a onclick="addDicData();" class="mr10 bt_blue" href="javascript:void(0);"><span>保存</span></a>
+    </div>
+    <div class="bord_gray padd_10 pb30">
+    	<form class="" id="dicdataForm" name="dicdataForm" method="post" enctype="multipart/form-data">
+        <!--所属应用 开始-->
+        <div class="mt10">
+        	<p class="fl leftName middle"><span>编码：</span></p>
+        	<span class="fl rightInfo middle">
+        	<input type="text" class="text_1" id="code" name="code" maxlength="20"/>
+        	</span>
+        	<div class="clear"></div>
+        </div>
+        <!--所属应用 结束-->
+         <!--所属应用 开始-->
+        <div class="mt10">
+        	<p class="fl leftName middle"><span>名称：</span></p>
+        	<span class="fl rightInfo middle">
+        	<input type="text" class="text_1" id="name" name="name" maxlength="100"/>
+        	</span>
+        	<div class="clear"></div>
+        </div>
+        
+        <#if typekey == 'bustype'>
+        	<div class="mt10">
+	        	<p class="fl leftName middle"><span>图片：</span></p>
+	        	<div class="fl rightInfo middle" style="position:relative">
+	        	<input id="uploadFile" name="uploadFile" type="file" onchange="setImagePreview(this);"/>
+	        	<a style="color:red">请上传大小为214*214的图片</a>
+                
+                <div class="mt10" id="localImag" style="position:absolute; width:214px; right:0; top:-20px">	          
+		            <img src="" id="preciew" />            
+		        </div>
+                
+	        	</div>
+	        	<div class="clear"></div>
+	        </div>
+	    <#else>
+	    	<div class="mt10" style="display: none">
+	        	<p class="fl leftName middle"><span>图片：</span></p>
+	        	<span class="fl rightInfo middle">
+	        	<input id="uploadFile" name="uploadFile" type="file"/>
+	        	</span>
+	        	<div class="clear"></div>
+	        </div>
+        </#if>
+        
+        <!--所属应用 结束-->
+        <!-- <div class="mt10">
+      <p class="fl leftName middle">父节点：</p>
+      <div class="fl rightInfo middle">
+        <input type="text" class="text_1">
+        <a class="ml10 bt_blue" href="javascript:;" onclick="show('cover','tcccd')"><span>选择</span></a>
+      </div>
+      <div class="clear"></div>
+    </div> -->
+        
+    <!--操作用户 开始-->
+        <!-- <div class="mt10">
+        	<p class="fl leftName middle"><span>排序：</span></p>
+          <div class="fl rightInfo lineh20"><span class="fl rightInfo middle">
+          <input type="text" class="text_1"  value=""/>
+      </span></div>
+            <div class="clear"></div>
+        </div> -->
+        <!--操作用户 结束-->
+        <!--操作实体 开始-->
+        <div class="mt10">
+        	<p class="fl leftName middle"><span>是否有效：</span></p>
+            <div class="fl rightInfo lineh20"><span class="fl rightInfo middle">
+           <select name="state" id="state">
+				<option value="1">是</option>
+				<option value="0">否</option>
+			</select>
+        </span></div>
+            <div class="clear"></div>
+        </div>
+        <!--操作实体 结束-->
+        <!--操作名称 开始-->
+        <div class="mt10">
+        	<p class="fl leftName middle"><span>描述：</span></p>
+            <div class="fl rightInfo lineh20"><span class="fl rightInfo middle">
+              <input name="remark" id="remark" maxlength="20" type="text" class="text_1" />
+          </span></div>
+            <div class="clear"></div>
+        </div>
+        <!--操作名称 结束-->
+      
+      </form>
+    </div>
+    <div class="mt10 mb10">
+    	<a  href="${ctx}/system/dicdata/${typekey}/list" class="mr10 bt_blue"><span>返回</span></a>
+    	<a class="mr10 bt_blue" href="javascript:resetVal();"><span>重置</span></a>
+    	<a onclick="addDicData();" class="mr10 bt_blue" href="javascript:void(0);"><span>保存</span></a>
+    </div>
+</div>
+
+</body>
+  
+</#escape>

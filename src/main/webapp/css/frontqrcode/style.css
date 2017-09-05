@@ -1,0 +1,87 @@
+body{
+	font-family: "微软雅黑";
+}
+.clear{
+	clear: both;
+}
+.blue_bg{
+	width: 100%;
+	min-height: 70px;
+	background: #0086d0; overflow:hidden;
+}
+.blue_bg dl dt{
+	width: 20%;
+	min-height: 70px;
+	position: relative;
+}
+.blue_bg dl dt img{
+	height: 55px;
+	position: absolute;
+	right: -20px;
+    top: 5px;
+}
+.blue_bg dl dd{
+	width: 80%;
+	background: #f2f2f2;
+	min-height: 70px;
+}
+.blue_bg dl dd p{
+	 padding:10px 10px 10px 30px ;
+	color: #666;
+	font-size: 20px;
+	font-family: "微软雅黑";
+	 line-height:26px;
+}
+.intro{ color:#666666;
+	padding: 15px 0;
+	margin: 0 15px;
+	border-bottom: 1px dashed #e6e6e6;
+	line-height:22px; font-size:16px;
+}
+.intro img{
+	width: 20px;
+	vertical-align: middle;
+}
+.intro .red{
+	color: #f20000;
+}
+.yqts{
+	border-bottom: 1px solid #eaeaea;
+	margin: 0;
+	padding: 15px;
+}
+p.line{
+	width: 100%;
+	height: 5px;
+	background: #f7f7f7;
+}
+.box_list{
+	padding: 15px;
+	margin-bottom: 60px;
+	
+}
+.box_list ul li{
+	width: 35%;
+	float: left;margin-right:7%;
+	margin-left:7%;  margin-bottom:7%;
+	text-align: center;
+	position: relative;
+	
+}
+
+.box_list ul li img{
+	
+	width: 100%;
+	
+}
+.box_list ul li p{
+	bottom: 5px;
+    color: #666;
+    left: 0;
+    padding: 10px 0;
+    position: absolute;
+    width: 100%;
+    font-size: 16px;
+    color: #fff;
+}
+

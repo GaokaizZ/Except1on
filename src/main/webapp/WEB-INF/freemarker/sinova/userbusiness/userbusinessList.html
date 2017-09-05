@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="${ctx}/js/sinova/userbusiness/userbusiness.js"></script>
+
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>用户业务管理</span></div>
+  <form id="searchForm" name="searchForm" action="${ctx}/userbusiness/list" method="post">
+		<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+		<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+		<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+  
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tb_searchbox mt20 bord_gray">
+    <tr>
+      <td>用户账号：
+        <input class="input_normal w160" id="account_" name="account_" value="${(user.account)!''}"/>
+        用户名称：
+        <input class="input_normal w160" id="name_" name="name_" value="${(name)!''}"/>
+      <span class="mr20"><a href="javascript:mySubmitForm('searchForm','CL');" class="bt_blue"><span>查询</span></a></span><a href="javascript:resetVal();" class="bt_blue"><span>重置</span></a></span></td>
+    </tr>
+  </table>
+ 
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mt15 tb_content1">
+    <tr>
+      <th>用户账号</th>
+      <th>用户名称</th>
+      <th>是否有效</th>
+      <th>操作</th>
+    </tr>
+    <#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+	   <#list returnDatas.data as _data>
+			<tr id="${(_data.id)!''}">
+				<td>${(_data.account)!''}</td>
+				<td>${(_data.name)!''}</td>
+				<td>
+					<#if "${(_data.state)!''}" == '1'>有效</#if>
+					<#if "${(_data.state)!''}" == '0'>无效</#if>
+				</td>
+		        <td>
+		        	<#if "${(roleId)!''}" == "admin">
+		        		&nbsp;
+		        	<#else>
+			        	<a class="" href="javascript:void(0);" onclick="selectBuessines('go','${(_data.id)!''}','${(_data.account)!''}','CL');">业务绑定</a>
+		        	</#if>
+		        </td>
+			</tr>
+       </#list>
+	 </#if>
+  </table>
+  		<!-- 分页 -->
+  		<#if returnDatas.page??>
+			<@h.pagetoolbar page=returnDatas.page formId='searchForm' />
+		</#if>
+	</form>
+</div>
+</body>
+
+				<input type="hidden" id="id" name="id" />	
+			
+				<div class="form-group col-xs-12">
+						<div class="col-sm-8" onmousemove="">
+							<input type="hidden"  name="account" id="account" class="form-control" >
+						</div>
+				</div>
+				<div class="form-group col-xs-12">
+						<div class="col-sm-8" onmousemove="">
+							<input type="hidden"  name="state" id="state" class="form-control" >
+						</div>
+				</div>
+
+				
+<!-- /.main-container -->
+
+</#escape>

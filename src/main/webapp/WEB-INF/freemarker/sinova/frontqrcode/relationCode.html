@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>${(goods.secondCategory)!''}</title>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="stylesheet" href="${ctx}/css/frontqrcode/ty.css" />
+
+</head>
+<body>
+<img src="${ctx}/images/1.png" height="0" width="0">
+<form action="${ctx}/qrcodedealing/submitBusiness" method="post" id="submitForm">
+<div class="ty-phone">
+  <div class="ty-screenwrap">
+    <div class="ty-screen show" data-href="">
+      <div class="ty-screen-content">
+      	<header>
+			<div><img src="${ctx}/images/img/logo.png" alt="logo" title="中国移动" class="fn-left" width="196" height="36">
+			<span class="fn-left">山西</span></div>
+		</header>
+	    <div class="clear" style="clear:both"></div>
+        <div class="ty-comhead small">
+          <div class="title fn-clear">
+            <div class="j-call-prev back" onclick="upback()"> <em class="ty-comicon"></em> </div>
+            <span class="text"></span> <em class="ty-icon icon-net22"></em> </div>
+        </div>
+        <div class="ty-comform ty-qrbox " >
+          <div class="msg yytgh">
+            
+            <p class="txt">您将办理${(goodsName)!''}<br/></p>
+ 			<p class="num">${(phone)!''}</p>
+			<div class="inputwrap2">
+                <input type="tel" id="vCode" name="moneydiy" placeholder="请输入短信验证码" maxlength="6" onkeypress="return IsNum(event);" onkeyup="change('mobilePhone',this.value);"/>             
+                <input type="hidden" id="opId" name="opId" value="${(opId)!''}"/>
+                <input type="hidden" id="goodsId" name="goodsId" value="${(goodsId)!''}"/>
+                <input type="hidden" id="busCode" name="busCode" value="${(busCode)!''}"/>
+          		<input type="hidden" id="feeCode" name="feeCode" value="${(feeCode)!''}"/>
+          		<input type="hidden" id="phone" name="phone" value="${(phone)!''}"/>
+          		<input type="hidden" id="type" name="type" value="1"/>
+          		<input type="hidden" id="backP" name="backP" value="${(backP)!''}"/>
+          		<input type="hidden" id="param" name="param" value="${(param)!''}"/>
+          		<input type="hidden" id="flag" name="flag" value="${(flag)!''}"/>
+          		<input type="hidden" id="cDate" name="cDate" value="${(cDate)!''}"/>
+            </div><br/>
+              <div class="fsyzm">
+              <span class="fs j-call-yzm" id=failmess style="color:orange"></span>
+              </div>
+              <div class="fsyzm">
+              <span class="cf"><input id="check_start1" type="button"  style = "width: 150px;" onclick="reSend('${(phone)!''}');" /></span>
+              </div>
+           
+          </div>
+          <div class="ty-qrbox-confirm" >
+          <span class="btn_submit j-call-next"  data-href="javascript:void(0);" onclick="submitRelation('${(phone)!''}');">
+          <em class="ty-comicon"></em>确认</span>  
+          <span class="btn_back j-call-url" onclick="upback();"><em class="ty-comicon"></em>返回</span>
+          </div>
+          
+        </div>
+        <div class="ty-phonenum-place"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+<script type="text/javascript" >
+
+/**
+ * JS定时器1
+ * @param {Object} o	元素对象
+ * @count:				基数值
+ * @id:					定时器进程
+ */
+var count1 = "${(countDown)!''}";
+controlTime1();
+function controlTime1(o){
+	//1定时器内元素状态
+	if(count1 >0){
+		document.getElementById("check_start1").disabled=true;
+		window.setTimeout(function(){
+			count1--;
+			document.getElementById("check_start1").value = count1+"秒后重发验证码";
+			controlTime1(this);
+		},1000); 
+	}
+	//2定时器解除后元素状态
+	else {
+		document.getElementById("check_start1").disabled=false;
+		document.getElementById("check_start1").value = "点击发送验证码";
+		count1 = "${(countDown)!''}";
+	}
+	
+}
+</script>
+<script src="${ctx}/js/sinova/frontqrcode/zepto-min.js"></script> 
+<script src="${ctx}/js/sinova/frontqrcode/ty.js"></script>
+<script src="${ctx}/js/sinova/frontqrcode/business.js"></script>
+<script src="${ctx}/js/coms/common/jquery-jtemplates.js"></script>
+</body>
+</html>

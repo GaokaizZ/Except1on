@@ -1,0 +1,297 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html> <@h.head />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="${ctx}/js/system/dicdata/ajaxdicdata.js">
+</script>
+<script type="text/javascript">
+var ctx = "${ctx}";
+var dicRoleCode = "${(dicRoleCode)!''}"</script>
+<script type="text/javascript" src="${ctx}/js/system/user/user.js">
+</script>
+<script type="text/javascript">
+</script>
+<body class="bg_cff">
+	<div class="mainBox">
+		<div class="route">
+			<span>二维码直通车</span>&nbsp;&gt;&nbsp;
+			<span>
+			<#if "${(dicRoleCode)!''}" == 'ROLE_SUPERMAN'>地市管理员管理</#if>
+			<#if "${(dicRoleCode)!''}" == 'ROLE_REGION_MANAGER'>营业厅管理员管理</#if>
+			<#if "${(dicRoleCode)!''}" == 'ROLE_OFFICE_MANAGE'>营业员管理</#if>
+			</span>
+		</div>
+		<form id="searchForm" name="searchForm" action="${ctx}/system/user/userRoleList?dicRoleCode=${(dicRoleCode)!''}" method="post">
+			<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+			<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+			<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+			<input type="hidden" name="id" id="id" />
+
+			<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tb_searchbox mt20 bord_gray">
+				<tr>
+					<td>
+						用户账号：${(userDTO.account)!''}
+						<input class="input_normal w160" type="text" id="account_" name="account" value="${(user.account)!''}" />
+						用户名称：
+						<input class="input_normal w160" type="text" id="name_" name="name" value="${(user.name)!''}" />
+
+
+
+						<!-- 是否有效：
+						<select name="state" id="state_">
+							<#if "${(user.state)!''}"== '1'>
+							<option value="">
+								全部
+							</option>
+							<option value="1" selected="selected">
+								有效
+							</option>
+							<option value="0">
+								无效
+							</option>
+							<#elseif "${(user.state)!''}"== '0'>
+							<option value="">
+								全部
+							</option>
+							<option value="1">
+								有效
+							</option>
+							<option value="0" selected="selected">
+								无效
+							</option>
+							<#else>
+							<option value="" selected="selected">
+								全部
+							</option>
+							<option value="1">
+								有效
+							</option>
+							<option value="0">
+								无效
+							</option>
+							</#if>
+						</select> -->
+
+						<!--frank  
+        	<span >选择地市：</span>
+        	<select  name="regionCode" id="bound_regionCode_" onchange="showCountry(this);" >
+        		<option value="" >全部</option>
+				<#if (regions??)&&(regions?size>0)>
+					<#list regions as _data>
+						<option value="${(_data.regionCode)!''}" >${(_data.regionName)!''}</option>
+			        </#list>
+			    </#if>
+	        </select>
+        	<span >选择区县：</span>
+        	<span id="span_countrySelect" >
+	        	<select ><option value="">请选择地市</option></select>
+	        </span>
+        	<span >选择营业厅：</span>
+        	<span id="span_officeSelect" >
+	        	<select ><option value="">请选择区县</option></select></span>-->
+						
+						<!-- -->
+
+
+						<span class="mr20"><a href="javascript:mySubmitForm('searchForm','CL');" class="bt_blue"><span>查询</span></a></span>
+						<span class="mr20"><a href="javascript:resetVal();" class="bt_blue"><span>重置</span></a></span>
+					</td>
+				</tr>
+			</table>
+			<p class="overflow mt10">
+
+				<table width="100%" style="text-align: right;">
+
+					<@shiro.hasPermission name="/system/user/userRoleList?dicRoleCode=ROLE_SUPERMAN" >
+					<tr>
+						<td>
+							<a class="bt_blue ml10 fr" href="javascript:void(0);" onclick="boundUser();"><span>添加用户为地市管理员</span> </a>
+							<span>选择地市：</span>
+							<select id="bound_regionCode_">
+								<option value="">
+									全部
+								</option>
+								<#if (regions??)&&(regions?size>0)> <#list regions as _data>
+								<option value="${(_data.regionCode)!''}">
+									${(_data.regionName)!''}
+								</option>
+								</#list> </#if>
+							</select>
+							
+						</td>
+					</tr>
+					</@shiro.hasPermission> <@shiro.hasPermission name="/system/user/userRoleList?dicRoleCode=ROLE_REGION_MANAGER" >
+					<tr>
+						<td>
+							<a class="bt_blue ml10 fr" href="javascript:void(0);" onclick="boundUser();"><span>添加用户为营业厅管理员</span>
+							</a>
+							<span>选择地市：</span>
+							<select name="regionCode" id="bound_regionCode_" onchange="showCountry();" disabled="disabled">
+								<option value="">
+									全部
+								</option>
+								<#if (regions??)&&(regions?size>0)> <#list regions as _data> <#if "${(_data.regionCode)!''}" == "${(userOffice.regionCode)!''}">
+								<option value="${(_data.regionCode)!''}" selected="selected">
+									${(_data.regionName)!''}
+								</option>
+								<#else>
+								<option value="${(_data.regionCode)!''}">
+									${(_data.regionName)!''}
+								</option>
+								</#if> </#list> </#if>
+							</select>
+
+							<span>选择区县：</span>
+							<span id="span_countrySelect"> <select name="countyCode" id="bound_countyCode_" onchange="showOffice();">
+									<option value="">
+										全部
+									</option>
+									<#if (counties??)&&(counties?size>0)> <#list counties as _data> <#if "${(_data.countyCode)!''}" == "${(userOffice.countyCode)!''}">
+									<option value="${(_data.countyCode)!''}" selected="selected">
+										${(_data.countyName)!''}
+									</option>
+									<#else>
+									<option value="${(_data.countyCode)!''}">
+										${(_data.countyName)!''}
+									</option>
+									</#if> </#list> </#if>
+								</select> </span>
+							<span>选择营业厅：</span>
+							<span id="span_officeSelect"> <select name="countyCode" id="bound_officeCode_">
+									<option value="">
+										全部
+									</option>
+									<#if (offices??)&&(offices?size>0)> <#list offices as _data> <#if "${(_data.officeCode)!''}" == "${(userOffice.officeCode)!''}">
+									<option value="${(_data.officeCode)!''}" selected="selected">
+										${(_data.officeName)!''}
+									</option>
+									<#else>
+									<option value="${(_data.officeCode)!''}">
+										${(_data.officeName)!''}
+									</option>
+									</#if> </#list> </#if>
+								</select> </span>
+
+
+
+						</td>
+					</tr>
+					</@shiro.hasPermission> 
+					<!-- 
+					<@shiro.hasPermission name="/system/user/userRoleList?dicRoleCode=ROLE_OFFICE_MANAGE" >
+					<tr>
+						<td>
+							<a class="bt_blue ml10 fr" href="javascript:void(0);" onclick="boundUser();"><span>添加用户为营业厅营业员</span>
+							</a>
+							<span>选择区县：</span>
+							<span id="span_countrySelect"> <select name="countyCode" id="bound_countyCode_" onchange="showOffice();" disabled="disabled">
+									<option value="">
+										全部
+									</option>
+									<#if (counties??)&&(counties?size>0)> <#list counties as _data> <#if "${(_data.countyCode)!''}" == "${(userOffice.countyCode)!''}">
+									<option value="${(_data.countyCode)!''}" selected="selected">
+										${(_data.countyName)!''}
+									</option>
+									<#else>
+									<option value="${(_data.countyCode)!''}">
+										${(_data.countyName)!''}
+									</option>
+									</#if> </#list> </#if>
+								</select> </span>
+							<span>选择地市：</span>
+							<select name="regionCode" id="bound_regionCode_" onchange="showCountry();" disabled="disabled">
+								<option value="">
+									全部
+								</option>
+								<#if (regions??)&&(regions?size>0)> <#list regions as _data> <#if "${(_data.regionCode)!''}" == "${(userOffice.regionCode)!''}">
+								<option value="${(_data.regionCode)!''}" selected="selected">
+									${(_data.regionName)!''}
+								</option>
+								<#else>
+								<option value="${(_data.regionCode)!''}">
+									${(_data.regionName)!''}
+								</option>
+								</#if> </#list> </#if>
+							</select>
+							<span>选择营业厅：</span>
+							<span id="span_officeSelect"> <select name="countyCode" id="bound_officeCode_" disabled="disabled">
+									<option value="">
+										全部
+									</option>
+									<#if (offices??)&&(offices?size>0)> <#list offices as _data> <#if "${(_data.officeCode)!''}" == "${(userOffice.officeCode)!''}">
+									<option value="${(_data.officeCode)!''}" selected="selected">
+										${(_data.officeName)!''}
+									</option>
+									<#else>
+									<option value="${(_data.officeCode)!''}">
+										${(_data.officeName)!''}
+									</option>
+									</#if> </#list> </#if>
+								</select> </span>
+						</td>
+					</tr>
+					</@shiro.hasPermission> -->
+				</table>
+
+
+
+
+
+
+
+			</p>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0" class="mt15 tb_content1">
+				<tr>
+					<th>
+						用户账号
+					</th>
+					<th>
+						用户名称
+					</th>
+					<th>
+						用户工号
+					</th>
+					<th>
+						地市
+					</th>
+					<th>
+						所属营业厅
+					</th>
+					<th>
+						是否有效
+					</th>
+
+				</tr>
+				<#if (returnDatas.data??)&&(returnDatas.data?size>0)> <#list returnDatas.data as _data>
+				<tr id="${(_data.id)!''}">
+					<td>
+						${(_data.account)!''}
+					</td>
+					<td>
+						${(_data.name)!''}
+					</td>
+					<td>
+						${(_data.workno)!''}
+					</td>
+					<td>
+						${(_data.description)!''}
+					</td>
+					<td>
+						${(_data.address)!''}
+					</td>
+					<td>
+						<#if "${(_data.state)!''}" == '1'>有效</#if> <#if "${(_data.state)!''}" == '0'>无效</#if>
+					</td>
+
+				</tr>
+				</#list> </#if>
+			</table>
+			<!-- 分页 -->
+			<#if returnDatas.page??> <@h.pagetoolbar page=returnDatas.page formId='searchForm' /> </#if>
+		</form>
+	</div>
+
+</body>
+
+<!-- /.main-container -->
+
+</#escape>

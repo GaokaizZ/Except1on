@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>4G套餐</title>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="stylesheet" href="${ctx}/css/frontqrcode/ty.css" />
+</head>
+<body>
+<img src="${ctx}/images/1.png" height="0" width="0">
+<div class="ty-phone">
+  <div class="ty-screenwrap">
+    <div class="ty-screen show" data-href="net.html">
+      <div class="ty-screen-content">
+        <div class="ty-comhead small">
+          <div class="title fn-clear">
+            <div class="j-call-prev back" onclick="upback();"> <em class="ty-comicon"></em> </div>
+            <span class="text">4G飞享套餐58</span> <em class="ty-icon icon-net22"></em> </div>
+        </div>
+        <div class="ty-qrbox" >
+          <div class="msg">
+            <p class="title">尊敬的${(phone)!''}用户：</p>
+            <p >此套餐适合2/3/4G网络用户使用，数据流量 500MB,语音通话 50分钟, 国内被叫免费。</p>
+             <div class="yytgh">营业员工号：<div class="inputwrap">
+                <input type="tel" name="yytgh" placeholder="请输入营业员工号" maxlength="4" value="" id="traderCode">
+                
+              </div></div>
+            <p class="name">您将办理4G飞享套餐58</p>
+       
+          </div>
+          <div class="ty-qrbox-confirm" data-href="index.html"> <span class="btn_submit j-call-next" data-href="javascript:void(0);" onclick="fillCode('${(phone)!''}');"><em class="ty-comicon"></em>确认</span> <span class="btn_back j-call-url"  onclick="upback();"><em class="ty-comicon" ></em>返回列表</span></div>
+          <div class="wxts"><p class="wxts-title">温馨提示：</p>
+          <div><p>1、不含12593/17951/12520/12586等号码产生的基本通话费。</p><p>2、国内电话不含港澳台。</p><p>3、仅含CMWAP和CMNET产生的流量，超出后正常收取流量费。
+</p></div></div>
+        </div>
+        <input type="hidden" id="param" name="param" value="${(param)!''}"/>
+        <div class="ty-phonenum-place"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="${ctx}/js/sinova/frontqrcode/zepto-min.js"></script> 
+<script src="${ctx}/js/sinova/frontqrcode/ty.js"></script>
+<script src="${ctx}/js/sinova/frontqrcode/business.js"></script>
+<script src="${ctx}/js/coms/common/jquery-jtemplates.js"></script>
+</body>
+</html>

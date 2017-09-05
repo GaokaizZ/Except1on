@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html> <@h.head />
+<style type="text/css">
+.jyj_table {
+	width: 47%;
+	float: left;
+}
+
+.zzt {
+	width: 47%;
+	float: left;
+	margin-left: 6%;
+	*margin-left: 3%;
+}
+
+.zzt img {
+	width: 100%;
+}
+
+.jyj_table tr:hover {
+	cursor: pointer;
+}
+
+.tjfs_span {
+	color: #333;
+	font-weight: 600;
+}
+
+.ff3f3f3 {
+	background: #f3f3f3;
+}
+</style>
+<script type="text/javascript" src="${ctx}/plugin/my97/WdatePicker.js"></script>
+<script type="text/javascript" src="${ctx}/js/sinova/businesstongji/businesstongji.js"></script>
+<script type="text/javascript" src="${ctx}/js/sinova/businesstongji/FusionCharts.js"></script>
+
+<body class="bg_cff">
+	<div class="mainBox">
+		<div class="route">
+			<span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>营业厅受理报表</span>
+		</div>
+		<form id="searchForm" name="searchForm"
+			action="${ctx}/businesstongji/listBusinessEntrance" method="post">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0"
+				class="tb_searchbox mt20 bord_gray">
+				<tr>
+					<td><span class="red">统计方式：</span> 
+					<select name="searchType" class="ff3f3f3">
+							<option value="0" selected="selected">地市</option>
+							<option value="1">营业厅</option>
+							<option value="2">营业员</option>
+							<option value="3">业务</option>
+					</select> 地市： 
+					<select name="searchCity">
+							<option selected="selected">请选择</option> <#if
+							(datar??)&&(datar?size>0)> <#list datar as rdata> <#if
+							"${(rdata.regionName)!''}" == "${(regionName)!''}">
+							<option value="${(rdata.regionCode)!''}" selected="selected">${(rdata.regionName)!''}</option>
+							<#else>
+							<option value="${(rdata.regionCode)!''}">${(rdata.regionName)!''}</option>
+							</#if> </#list> </#if>
+					</select> 
+					<br /> 开始时间：<input class="input_normal w160" type="text"
+						id="beginTime_" name="beginTime" readonly="readonly"
+						onfocus="selectTime();"
+						onclick="WdatePicker({el:'beginTime_',dateFmt:'yyyy-MM-dd'})"
+						value="${((beginTime)?string('yyyy-MM-dd'))!'' }" /> 结束时间： <input
+						class="input_normal w160" type="text" id="endTime_" name="endTime"
+						readonly="readonly"
+						onfocus="WdatePicker({el:'endTime_',maxDate:'%y-%M-%d',minDate:'#F{$dp.$D(\'beginTime_\')}'})"
+						onclick="WdatePicker({el:'endTime_',dateFmt:'yyyy-MM-dd'})"
+						value="${((endTime)?string('yyyy-MM-dd'))!'' }" /> 
+						<span class="mr20"><a href="javascript:mySubmitForm('searchForm','CL');" class="bt_blue">
+						<span>查询</span></a></span> 
+						<span class="mr20"><a href="javascript:resetVal();" class="bt_blue"><span>重置</span></a></span>
+					</td>
+				</tr>
+			</table>
+
+			<p class="overflow mt10">
+				<a class="bt_blue ml10 fr" href="javascript:void(0);" onclick="expRegion();"><span>全部导出</span></a>
+			</p>
+
+			<div class="">
+				<table width="47%" border="0" cellspacing="0" cellpadding="0"
+					class="mt15 tb_content1 jyj_table" style="float:left">
+					<tr>
+						<th width="30">&nbsp;</th>
+						<th>地市编码</th>
+						<th>地市名称</th>
+						<th>办理量</th>
+					</tr>
+					<#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+					<#list returnDatas.data as _data>
+					<tr>
+						<td>${_data_index+1}</td>
+						<td>${(_data.account)!''}</td>
+						<td>${(_data.mobile)!''}</td>
+						<!--数字型-->
+						<td>${(_data.ip)!0}</td>
+					</tr>
+					</#list> 
+					</#if>
+					<tr>
+						<td colspan="4" style="text-align: right;padding-right: 10px;">
+							<#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+								<#assign sum=0>
+								<#list returnDatas.data as _data>
+										<#if _data.ip??>
+											<#assign sum=sum+_data.ip?number>
+										</#if>
+								</#list>
+							</#if>
+							<#if sum??>
+								省内合计：${sum?number}
+							</#if> 
+						</td>
+					</tr>
+				</table>
+				
+			</div>
+			<div id="chartdiv" class="zzt mt15" style="float:left">
+				<script type="text/javascript">
+					var myChart = new FusionCharts("${ctx}/js/sinova/businesstongji/Column2D.swf", "chartdiv", "500", "318",0,0);
+					myChart.setDataXML("${byCityXml}");
+					myChart.render("chartdiv");
+				</script>
+			</div>
+		</form>
+
+	</div>
+</body>
+</#escape>

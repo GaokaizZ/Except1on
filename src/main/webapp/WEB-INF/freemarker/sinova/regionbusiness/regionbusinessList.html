@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="${ctx}/js/sinova/regionbusiness/regionbusiness.js"></script>
+<script type="text/javascript">
+var ctx = "${ctx}";
+
+//条件查询地市
+function mySubmitForm(formId,_target){
+	if (typeof(_target) == "undefined" || _target == "") { 
+		   
+	}else{
+		$("#pageIndex").val("1");
+	}
+	$("#"+formId).submit();
+}
+//重置地市查询条件
+function cleans(){
+	jQuery("#regionCode_").val("");
+	jQuery("#regionName_").val("");
+}
+</script>
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>地市业务管理</span></div>
+  <form id="searchForm" name="searchForm" action="${ctx}/regionbusiness/list" method="post">
+  		<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+		<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+		<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+  		<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tb_searchbox mt20 bord_gray">
+    		<tr>
+      			<td>地市编号：<input class="input_normal w160" type="text" id="regionCode_" name="regionCode" value="${(regionCode)!''}" 
+			  	maxlength="7" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+                                                                   地市名称：<input class="input_normal w160" type="text" id="regionName_" name="regionName" value="${(regionName)!''}" />
+      	  		<span class="mr20">
+      	  			<a href="javascript:mySubmitForm('searchForm','CL');" class="bt_blue"><span>查询</span></a>
+      	  			<a href="javascript:void(0);" class="bt_blue" onclick="cleans();"><span>重置</span></a>
+      	  		</span>
+      			</td>
+    		</tr>
+  		</table>
+ 
+  		<table width="100%" border="0" cellspacing="0" cellpadding="0" class="mt15 tb_content1" style="border-collapse:collapse;empty-cells:hide">
+    		<tr>
+      			<th>地市编号 </th>
+      			<th>地市名称</th>
+      			<th>是否有效</th>
+      			<th>操作</th>
+    		</tr>
+    		<#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+			<#list returnDatas.data as _data>
+			<tr id="${(_data.id)!''}">
+				<td>${(_data.regionCode)!''}</td>
+				<td>${(_data.regionName)!''}</td>
+				<td><#if "${(_data.state)!''}" == '1'>有效</#if></td>
+				<td><a href="javascript:void(0);" onclick="selectBuessines('${(_data.id)!''}','${(_data.regionName)!''}','CL');">业务绑定</a></td>
+			</tr>
+    		</#list>
+			</#if>
+  		</table>
+  		<!-- 分页 -->
+  	<#if returnDatas.page??>
+		<@h.pagetoolbar page=returnDatas.page formId='searchForm' />
+	</#if>
+  </form>
+</div>
+
+</body>
+</#escape>

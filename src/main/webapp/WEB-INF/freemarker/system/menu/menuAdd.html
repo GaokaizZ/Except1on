@@ -1,0 +1,259 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<link rel="stylesheet" href="${ctx}/js/coms/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css"/>
+<script type="text/javascript" src="${ctx}/js/coms/ztree/js/jquery.ztree.all-3.5.js"></script>
+<script type="text/javascript">
+<!--
+	var menuTreesetting = {
+		callback: {
+			onClick:MenuzTreeOnClick
+		},
+		data : {
+			simpleData : {
+				enable : true,
+				idKey : "id",
+				pIdKey : "pid",
+				rootPId : "null"
+			}
+		}
+	};
+
+	$(document).ready(function() {
+		
+		jQuery.post("${ctx}/system/menu/list/json",
+			function(_json) {
+				if (_json.status == "success") {
+					$.fn.zTree.init($("#menuListTree"), menuTreesetting, _json.data);
+					
+					var zTree =$.fn.zTree.getZTreeObj("menuListTree");
+				    //zTree.expandAll(true);
+					
+				} else {
+					myalert(_json.message);
+				}
+			});
+	});
+	
+	function MenuzTreeOnClick(event, treeId, treeNode) {
+	    showdata(treeNode);
+	};
+	
+	function showdata(result) {
+		$("#updateForm select ").each(function() {
+			$(this).find('option:first').attr('selected', 'selected');
+		});
+		for (var s in result) {
+			set_val(s, result[s]);
+		}
+		
+		var _pid=result["pid"];
+		if((!_pid)||_pid==null||_pid=="null"||_pid==""){
+			jQuery("#pid").val("");
+		}else{
+			jQuery("#pid").val(_pid);
+		}
+		
+		
+		var _pNode= result.getParentNode();
+		if(_pNode){
+			jQuery("#pname").val(_pNode["name"]);
+		}else{
+			jQuery("#pname").val("");
+		}
+		
+	}
+	
+	function deleteMenu(){
+		var id=jQuery("#id").val();
+		if(!id||id==""){
+			alert("请选择你要删除的记录");
+			return;
+		}else{
+			var _url="${ctx}/system/menu/delete?id="+id;
+			var listurl="${ctx}/system/menu/list";
+			mydelete(_url,listurl);
+		}
+	}
+function resetVal(){
+	$("#names").val("");
+	$("#pageUrls").val("");
+	$("#name").val("");
+	$("#types").val("");
+	$("#sorts").val("");
+	$("#states").val("");
+	$("#remarks").val("");
+}	
+function saveForm(){
+	var names = $("#names").val();
+	var pageUrls = $("#pageUrls").val();
+	var name = $("#name").val();
+	var types = $("#types").val();
+	var sorts = $("#sorts").val();
+	var states = $("#states").val();
+	var remarks = $("#remarks").val();
+	var id = $("#id").val();
+	if(""==names){
+		alert("请输入菜单名称！");
+		return;
+	}
+	if(""==pageUrls){
+		alert("请输入菜单地址！");
+		return;
+	}
+//	if(""==name){
+//		alert("请选择菜单父节点！");
+//		return;
+//	}
+	if(""==types){
+		alert("请选择资源类型！");
+		return;
+	}
+	if(""==sorts){
+		alert("请输入菜单序号！");
+		return;
+	}
+	if(""==states){
+		alert("请选择菜单是否有效！");
+		return;
+	}
+	 if(remarks.length>400){
+			alert("备注不能超过200个字");
+			return;
+		}
+	$.ajax({
+		url:ctx + "/system/menu/update",
+		type:"post",
+		data:"names="+names+"&pageUrls="+pageUrls+"&name="+name+"&types="+types+"&sorts="+sorts+"&states="+states+"&remarks="+remarks+"&id="+id,
+		dataType:"json",
+		success:function(msg){
+   			if(msg.status=="success"){
+   				alert("恭喜你！添加成功");
+   				window.location.href = ctx +"/system/menu/list";
+   			}else{
+   				alert("添加失败");
+   				window.location.href = ctx +"/system/menu/list";
+   			}
+		},
+		error:function(){
+			alert("添加失败，请稍后再试！");
+		}
+	});
+}
+//-->
+</script>	
+<body class="bg_cff">
+<div class="bmBox">
+  <div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp;<span>菜单管理</span></div>
+  <form id="updateForm" name="updateForm"  action="${ctx}/system/menu/update"   method="post" >
+  <!--右边 开始-->
+  <div class="mainBox ">
+    <!--功能权限新增页面 开始-->
+    <div class="newGN ">
+      <div class="mt10 mb10">
+      	<a href="javascript:history.go(-1)" class="mr10 bt_blue" ><span>返回</span></a>
+      	<a href="javascript:;" class="mr10 bt_blue" onclick="resetVal();"><span>重置</span></a>
+      	<a href="javascript:;" class="mr10 bt_blue" onclick="saveForm();"><span>保存</span></a>
+      </div>
+      <div class="bord_gray padd_10 pb30 mt20">
+        <p class="lineh40 borb font16"><span>菜单编辑</span></p>
+        <!--功能名称 开始-->
+        <div class="mt10">
+          <p class="fl leftName middle"><span class="red">*</span>名称：</p>
+          <div class="fl rightInfo rightInfo_2 middle">
+            <input type="text" class="text_1" type="text" id="names" name="names" maxlength="100"/>
+          </div>
+          <div class="clear"></div>
+        </div>
+        <!--功能名称 结束-->
+        <!--显示图标 开始-->
+        <div class="mt10">
+          <p class="fl leftName middle"><span class="red">*</span><span>地址：</span></p>
+          <div class="fl rightInfo rightInfo_2 middle">
+            <input type="text" class="text_1"  type="text" id="pageUrls" name="pageUrls" maxlength="1000"/>
+          </div>
+          <div class="clear"></div>
+        </div>
+        <!--显示图标 结束-->
+        <div class="mt10">
+      <p class="fl leftName middle">父节点：</p>
+      <div class="fl rightInfo middle">
+        <input type="text" class="text_1" name="name"  id="name" readonly="readonly"/>
+        <input type="hidden" name="id" id="id"/>
+        <a onclick="show('cover','tcccd')" href="javascript:;" class="ml10 bt_blue"><span>选择</span></a>
+      </div>
+      <div class="clear"></div>
+    </div>
+        <!--顺序值 开始-->
+        <div class="mt10 gnSXYC">
+          <p class="fl leftName middle"><span class="red">*</span><span>资源类型：</span></p>
+          <div class="fl rightInfo rightInfo_2 middle">
+           <select  name="types" id="types" >
+						<option value="0">按钮资源</option>
+						<option value="1">导航菜单</option>
+					</select>
+          </div>
+          <div class="clear"></div>
+        </div>
+        <!--顺序值 结束-->
+         <!--顺序值 开始-->
+        <div class="mt10 gnSXYC">
+          <p class="fl leftName middle"><span class="red">*</span><span>排序：</span></p>
+          <div class="fl rightInfo rightInfo_2 middle">
+            <input type="text" class="text_1" type="text" id="sorts" name="sorts" maxlength="11"  onkeypress="return IsNum(event);"/>
+          </div>
+          <div class="clear"></div>
+        </div>
+        <!--顺序值 结束-->
+         <!--顺序值 开始-->
+        <div class="mt10 gnSXYC">
+          <p class="fl leftName middle"><span class="red">*</span><span>是否有效：</span></p>
+          <div class="fl rightInfo rightInfo_2 middle">
+           <select id="states" name="states">
+						<option value="1">是</option>
+						<option value="0">否</option>
+					</select>
+          </div>
+          <div class="clear"></div>
+        </div>
+        <!--顺序值 结束-->
+        
+          <!--顺序值 开始-->
+        <div class="mt10 gnSXYC">
+          <p class="fl leftName middle">备注<span>：</span></p>
+          <div class="fl rightInfo rightInfo_2 middle">
+         <textarea cols="60" rows="10" name="remarks"  id="remarks" ></textarea>
+          </div>
+          <div class="clear"></div>
+        </div>
+        <!--顺序值 结束-->
+      </div>
+      <div class="mt10 mb10">
+      	<a href="javascript:history.go(-1)" class="mr10 bt_blue" ><span>返回</span></a>
+      	<a href="javascript:;" class="mr10 bt_blue" onclick="resetVal();"><span>重置</span></a>
+      	<a href="javascript:;" class="mr10 bt_blue" onclick="saveForm();"><span>保存</span></a>
+      </div>
+    </div>
+    <!--功能权限新增页面 结束-->
+  </div>
+  <!--右边 结束-->
+  <div class="clear"></div>
+ </form> 
+</div>
+<!--弹出层 开始-->
+<div class="cover" id="cover"></div>
+
+
+<div class="pop" id="tcccd" style="width: 500px; ">
+  <div class="popTitle"><span class="close fr" onclick="hide('cover','tcccd')"></span><strong class="font14 fl">选择菜单</strong>
+    <div class="clear"></div>
+  </div>
+  <div class="mt25 mb25 ">
+  <div class="shuBox bord_gray " style=" height:160px; margin:0 auto"><ul id="menuListTree" class="ztree"></ul></div>
+  
+  </div>
+  <div class="text_c mt10 mb10"><a href="javascript:;" class="mr10 bt_blue" onclick="hide('cover','tcccd');"><span>确定</span></a><a href="javascript:;" class="mr10 bt_blue" onclick="hide('cover','tcccd')"><span>取消</span></a></div>
+</div>
+</body>
+
+</#escape>

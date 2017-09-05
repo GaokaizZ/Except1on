@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<script type="text/javascript" src="${ctx}/js/sinova/office/office.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+$("#ids").click(function(){
+		if($(this).prop("checked")){
+			$("input[name='check_li']").each(function(){ 
+				 $(this).prop("checked","true");
+			}) 
+		}else{
+			$("input[name='check_li']").each(function(){ 
+				$(this).removeAttr("checked");
+			}) 
+		}
+	});
+	
+	$("input[name='check_li']").click(function(){
+		var flag=$(this).prop("checked");
+		if(flag){
+			flag=checkCheckBox(flag);
+			if(flag){
+				$("#ids").prop("checked","true");
+			}
+		}else{
+			$("#ids").removeAttr("checked");
+		}
+	});
+});
+function checkCheckBox(flag) {
+	if(flag){
+		$("input[name='check_li']").each(function(){
+			if(!$(this).prop("checked")){
+				return flag=false;
+			}
+		})
+	}else{
+		$("input[name='check_li']").each(function(){
+			if($(this).prop("checked")){
+				return flag=true;
+			}
+		})
+	}
+	return flag;
+}
+
+/*function findUserByOfficeName(){
+	$("#searchForm").attr("action",ctx+"/useroffice/listoffice");
+	$("#searchForm").submit();
+}*/
+</script>
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>营业厅用户管理</span></div>
+  <form  id="searchForm" name="searchForm" action="${ctx}/useroffice/list" method="post">
+		<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+		<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+		<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+  
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tb_searchbox mt20 bord_gray">
+    <tr>
+      <td>营业厅编号：
+        <input class="input_normal w160"  type="text" id="officeCode" name="officeCode" value="${officeCode}" readonly="readonly"/>
+        <input type="hidden" id="regionCode" name="regionCode" value="${(regionCode)!' '}"/>
+        <input type="hidden" id="countyCode" name="countyCode" value="${(countyCode)!' '}"/>
+                  用户账号：
+        <input class="input_normal w160" type="text" id="account" name="account" value="${(ouDTO.account)!''}"/>
+        <span class="mr20">
+        	<a href="javascript:findUserByOfficeName('searchForm','CL');" class="bt_blue"><span>查询</span></a></span>
+        	<a href="javascript:resetVal();" class="bt_blue"><span>重置</span></a>
+        </td>
+    </tr>
+  </table>
+  <p class="overflow mt10">
+  		<@shiro.hasPermission name="/useroffice/findUser" > 
+  			<a class="bt_blue ml10 fr" href="javascript:;" onclick="userNotInOffice();"><span>添加</span></a>
+  		</@shiro.hasPermission>
+  		<@shiro.hasPermission name="/useroffice/delete" >
+  		<a class="bt_blue ml10 fr" href="javascript:;" onclick="deleteMores();"><span>批量删除</span></a>
+  		</@shiro.hasPermission>
+  		
+  		
+  </p>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mt15 tb_content1" style="border-collapse:collapse;empty-cells:hide">
+    <tr>
+      <th width="30"><input class="checkedAll" type="checkbox"  name="ids" id="ids" /></th>
+      <th>用户账号 </th>
+      <th>用户名</th>
+      <th>地市名称</th>
+      <th>区县名称</th>
+      <th>营业厅名称</th>
+      <th>用户岗位</th>
+      <th>操作</th>
+    </tr>
+     
+			<#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+
+				<#list returnDatas.data as _data>
+						<tr id="${(_data.id)!''}">
+							<td>
+								<input name="check_li"   type="checkbox" value="${(_data.id)!''}" />
+							</td>
+							<td>
+									${(_data.account)!''}
+							</td> 
+							<td>
+									${(_data.userName)!''}
+							</td> 
+							<td>
+									${(_data.regionName)!''}
+							</td>
+							<td>
+									${(_data.countyName)!''}
+							</td>
+							<td>
+									${(_data.officeName)!''}
+							</td>
+							<td>
+								<#if (DicData??)&&(DicData?size>0)>
+								<#list DicData as _dicdata>
+									<#if "${(_dicdata.code)!''}" == "${(_data.postName)!''}">
+										${(_dicdata.name)!''}
+										<#break>
+									</#if>
+								</#list>
+							</#if>
+							</td>
+     						<td>
+     							<@shiro.hasPermission name="/useroffice/postList" >
+     							<a class="" href="javascript:void(0);" onclick="show('cover','szgw');listPost('${(_data.id)!''}');" >设置岗位</a>
+     							</@shiro.hasPermission>
+     						</td>
+						</tr>
+				</#list>
+			</#if>
+  </table>
+  <!-- 分页 -->
+  		<#if returnDatas.page??>
+			<@h.pagetoolbar page=returnDatas.page formId='searchForm' />
+		</#if>
+  </form>
+</div>
+
+
+
+
+<!--弹出层-->
+<div class="cover" id="cover" ></div>
+<div style="width: 300px; " id="szgw" class="pop">
+  <div class="popTitle"><span onclick="hide('cover','szgw')" class="close fr"></span><strong class="font14 fl">选择岗位</strong>
+    <div class="clear"></div>
+  </div>
+  <div class="mt25 mb25" id="postlist">
+	<!-- postList.html -->	
+  </div>
+  <div class="text_c mt10 mb10">
+  	  <@shiro.hasPermission name="/useroffice/update" >
+	  	<a onclick="updatePost();" class="mr10 bt_blue" href="javascript:;"><span>设置岗位</span></a>
+	  </@shiro.hasPermission>
+	  <a onclick="hide('cover','szgw')" class="mr10 bt_blue" href="javascript:;"><span>取消</span></a>
+  </div>
+</div>
+<div style="width: 300px; " id="szgwCg" class="pop">
+  <div class="popTitle"><a onclick="hide('cover','szgwCg')" class="close fr" href="javascript:;"></a><strong class="font14 fl">提示</strong>
+    <div class="clear"></div>
+  </div>
+  <div class="mt25 mb25">
+    <p class="text_c">设置成功！</p>
+  </div>
+  <div class="text_c mt10 mb10"><a onclick="hide('cover','szgwCg')" class="mr10 bt_blue" href="javascript:;"><span>确定</span></a></div>
+</div>
+
+<div class="pop" id="delete" style="width: 300px; ">
+  <div class="popTitle"><span class="close fr" onclick="hide('cover','delete')"></span><strong class="font14 fl">提示</strong>
+    <div class="clear"></div>
+  </div>
+  <div class="mt25 mb25">
+    <p class="text_c">确定要删除选中记录吗？</p>
+  </div>
+  <div class="text_c mt10 mb10"><a href="javascript:;" class="mr10 bt_blue" onclick="hide('cover','delete');show('cover','deleteCg')"><span>确定</span></a><a href="javascript:;" class="mr10 bt_blue" onclick="hide('cover','delete')"><span>取消</span></a></div>
+</div>
+<div class="pop" id="deleteCg" style="width: 300px;">
+  <div class="popTitle"><a href="javascript:;" class="close fr" onclick="hide('cover','deleteCg')"></a><strong class="font14 fl">提示</strong>
+    <div class="clear"></div>
+  </div>
+  <div class="mt25 mb25">
+    <p class="text_c">删除成功！</p>
+  </div>
+  <div class="text_c mt10 mb10"><a href="javascript:;" class="mr10 bt_blue" onclick="hide('cover','deleteCg')"><span>确定</span></a></div>
+</div>
+</body>
+</#escape>

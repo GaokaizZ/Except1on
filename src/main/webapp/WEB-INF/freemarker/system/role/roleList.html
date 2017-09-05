@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="${ctx}/css/system/system.css" />
+<script type="text/javascript" src="${ctx}/js/system/role/role.js"></script>
+
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>角色管理</span></div>
+  <form method="post"  action="${ctx}/system/role/list"  name="searchForm" id="searchForm">
+		<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+		<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+		<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+  
+  		<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tb_searchbox mt20 bord_gray">
+    		<tr>
+      			<td>角色编号：<input class="input_normal w160" type="text" id="code" name="code" value="${(roleCode)!''}"/>
+       				角色名称：<input class="input_normal w160" type="text" id="name" name="name" value="${(roleName)!''}"/>
+       				是否有效：<select  name="state" id="state_">
+	       					<#if "${(role.state)!''}"== '1'>
+								<option value="" >全 部</option>
+								<option value="1" selected="selected">有 效</option>
+								<option value="0">无 效</option>
+							<#elseif  "${(role.state)!''}" == '0'>
+								<option value="" >全 部</option>
+								<option value="1">有 效</option>
+								<option value="0" selected="selected">无 效</option>
+							<#else>
+								<option value="" selected="selected">全 部</option>
+								<option value="1">有 效</option>
+								<option value="0">无 效</option>
+							</#if>
+						  </select>
+        
+      					  <span class="mr20">
+      						<a href="javascript:mySubmitForm('searchForm','CL');" class="bt_blue"><span>查询</span></a>
+      						<a href="javascript:void(0);" class="bt_blue" onclick="cleans();"><span>重置</span></a>
+      					  </span>
+      			</td>
+    		</tr>
+  		</table>
+  	<p class="overflow mt10">
+  		<a class="bt_blue ml10 fr" href="javascript:void(0);" onclick="beforeSave();"><span>添加</span></a>
+  	</p>
+  	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="mt15 tb_content1" style="border-collapse:collapse;empty-cells:hide">
+    	<tr>
+      		<th>编号 </th>
+      		<th>名称</th>
+      		<th>是否有效</th>
+      		<th>操作</th>
+    	</tr>
+    	<#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+		<#list returnDatas.data as _data>
+		<tr id="${(_data.id)!''}">
+			<td>${(_data.code)!''}</td>
+			<td>${(_data.name)!''}</td>
+			<td>
+				<#if "${(_data.state)!''}" == '1'>有效</#if>
+		  		<#if "${(_data.state)!''}" == '0'>无效</#if>
+			</td>
+			<td><a class="" href="javascript:void(0);" onclick="beforeUpdate('${(_data.id)!''}');">编辑</a>
+				<a class="" href="javascript:void(0);" onclick="deleteRole('${(_data.id)!''}');"><span>删除</span></a>
+      		</td>
+    	</tr>
+    	</#list>
+		</#if>
+  	</table>
+  	<!-- 分页 -->
+  	<#if returnDatas.page??>
+		<@h.pagetoolbar page=returnDatas.page formId='searchForm' />
+	</#if>
+  </form>
+  </div>
+</body>
+</#escape>

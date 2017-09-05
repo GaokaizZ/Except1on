@@ -1,0 +1,477 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>移动4G狂欢季扫码抽奖活动</title>
+<link rel="stylesheet" href="${ctx}/css/choujiang/css/style.css" />
+<script src="${ctx}/css/choujiang/js/jquery-1.8.3.min.js"></script> 
+<!-- --> <script type="text/javascript">
+//手机正则
+var mobileReg =/^(13[0-9]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|6|7|8|9]|14[0-9])\d{8}$/;
+//验证码正则
+var vCodeReg=/^\d{6}$/
+
+function sendVCode(){
+	$("#failmess").html("");
+	var acc = $("#mobilePhone").val();
+	//验证验证码
+	if(trim(acc) == ''){
+		$("#showMsg").show();
+		$("#failmess").html("请输入手机号！");
+		return;
+	}else{
+		if(!mobileReg.test(trim(acc))){
+			$("#showMsg").show();
+			$("#failmess").html("请输入正确的手机号码！");
+			return;
+		}
+	}
+	document.getElementById("check_start1").disabled=true;
+	 $.ajax({
+		url:"${ctx}/rotate/sendMess",
+		type:"post",
+		dataType : "json",
+		data:"account="+trim(acc),
+		success:function(date){
+			if(date.status=="1"){
+				$("#showMsg").show();
+				$("#failmess").html("短信验证码发送成功,请注意查收 ！");
+				controlTime1();
+				return;
+			}else if(date.status=="0"){
+				document.getElementById("check_start1").disabled=false;
+				$("#showMsg").show();
+				$("#failmess").html("短信验证码发送失败！");
+				return;
+			}else if(date.status=="3"){
+				document.getElementById("check_start1").disabled=false;
+				$("#showMsg").show();
+				$("#failmess").html("手机号非山西移动号码！");
+				return;
+			}
+		},
+		error:function(){
+			document.getElementById("check_start1").disabled=false;
+			$("#showMsg").show();
+			$("#failmess").html("系统异常，请稍后再试！");
+		}
+	}); 
+}
+
+function formSubmit(){
+	$("#failmess").html("");
+   	var acc = $("#mobilePhone").val();
+   	var vCode = $("#vCode").val();
+   	if(trim(acc) == ''){
+   		$("#showMsg").show();
+   		$("#failmess").html("请输入手机号!");
+   		return;
+   	}else{
+		if(!mobileReg.test(trim(acc))){
+			$("#showMsg").show();
+			$("#failmess").html("请输入正确的手机号码！");
+			return;
+		}
+	}
+   	if(trim(vCode) == ''){
+   		$("#showMsg").show();
+   		$("#failmess").html("请输入短信验证码!");
+   		return;
+   	}else{
+		if(!vCodeReg.test(trim(vCode))){
+			$("#showMsg").show();
+			$("#failmess").html("请输入正确的 短信验证码！");
+			return;
+		}
+	}
+   	$.ajax({
+		url:"${ctx}/rotate/login",
+		type:"post",
+		dataType : "json",
+		data:"mobilePhone="+trim(acc)+"&vCode="+vCode,
+		success:function(date){
+			if(date.status=="1"){
+				window.location.href="${ctx}/rotate/index";
+			}else if(date.status=="0"){
+				$("#showMsg").show();
+				$("#failmess").html("短信验证码错误！");
+				return;
+			}else if(date.status=="3"){
+				$("#showMsg").show();
+				$("#failmess").html("手机号非山西移动号码！");
+				return;
+			}else if(date.status=="4"){
+				$("#showMsg").show();
+				$("#failmess").html("系统异常，请稍后再试!");
+				return;
+			}
+		},
+		error:function(){
+			$("#showMsg").show();
+			$("#failmess").html("系统异常，请稍后再试！");
+		}
+	}); 
+}
+
+//空格
+function trim(str) {
+	return str.replace(/(^\s*)|(\s*$)/g, "");
+}
+//数字判断
+function IsNum(e) {
+    var k = window.event ? e.keyCode : e.which;
+    if (((k >= 48) && (k <= 57)) || k == 8 || k == 0) {
+    } else {
+        if (window.event) {
+            window.event.returnValue = false;
+        }
+        else {
+            e.preventDefault(); //for firefox 
+        }
+    }
+}
+
+function change(id,str) {
+    document.getElementById(id).value = str.replace(/\D/gi, "");
+}
+
+/**
+ * JS定时器1
+ * @param {Object} o	元素对象
+ * @count:				基数值
+ * @id:					定时器进程
+ */
+var count1 = "60";
+function controlTime1(o){
+	//1定时器内元素状态
+	if(count1 >0){
+		window.setTimeout(function(){
+			count1--;
+			$("#check_start1").html(count1+"秒后重发验证码");
+			//document.getElementById("check_start1").innerhtml = count1+"秒后重发验证码";
+			controlTime1(this);
+		},1000); 
+	}
+	//2定时器解除后元素状态
+	else {
+		document.getElementById("check_start1").disabled=false;
+		$("#check_start1").html("获取动态验证码");
+		//document.getElementById("check_start1").innerhtml = "获取动态验证码";
+		count1 = "60";
+	}
+	
+}
+</script>
+</head>
+<body>
+  <!-- <script type="text/javascript">
+ 	window.location.href="${ctx}/rotate/actEnd";
+ </script> -->
+<div class="main2" style="padding-bottom:5px;">
+<div class="titlehd"><img src="${ctx}/css/choujiang/images/fh.jpg" width="21" height="40" alt="" class="fh">4G狂欢季扫码抽奖活动<img src="${ctx}/css/choujiang/images/sz.jpg" width="35" height="30" alt="" class="sz"></div>
+<a href="http://www.sx.10086.cn/4Gjiewap/index.html"><img src="${ctx}/css/choujiang/images/cjbanner.jpg" width="100%" alt="" style="display:block"></a>
+  <div class="cyxx">
+  <ul>
+  <li>
+  <#if USER_MOBILE??>
+  	<span>${USER_MOBILE}</span> ，您好！
+  <#else>
+   	您好！请登录后再抽奖！
+  </#if>
+  </li>
+  </ul>
+  <span class="ycy">${allCount}人已参与</span>
+  </div>
+  
+    <ul class="tab_award">
+	  <li class="on">抽 奖</li>
+	  <li onClick="location.href='${ctx}/rotate/hdgz';">中奖查询及奖项设置</li>
+	</ul>
+  
+  <div class="space_20"></div>             
+  <div class="space_05"></div>
+  <!--转盘开始-->
+  <div class="rotatebox">
+    <div class="rotate" id="rotaryArrow"> 
+       
+    </div>
+    <div class="start" id="start"></div>
+  </div>
+   <!--转盘结束-->
+  <p class="link">
+	更多惊喜请点击<a href="http://wap.sx.10086.cn">山西移动触屏版营业厅</a>
+  </p>
+  <table width="100%" cellspacing="0" cellpadding="0" class="table-2 mt10">
+            <tbody><tr>
+                <td>
+                    <a href="http://wap.sx.10086.cn/m/enhance/directcard/index.action">
+                        <img src="${ctx}/css/choujiang/images/icon1-cards.png">
+                        <p>4G换卡</p>
+                    </a>
+                </td>
+                <td>
+                    <a href="http://wap.sx.10086.cn/m/1-2-3-1-0-0.html">
+                        <img src="${ctx}/css/choujiang/images/icon2-wifi.png">
+                        <p>流量专区</p>
+                    </a>
+                </td>
+                <td>
+                    <a href="http://wap.sx.10086.cn/shop/product/listPhone_new.jsp">
+                        <img src="${ctx}/css/choujiang/images/icon3-phone.png">
+                        <p>优惠购机</p>
+                    </a>
+                </td>
+                <td>
+                    <a href="http://wap.sx.10086.cn/m/login/index.action">
+                        <img src="${ctx}/css/choujiang/images/my.png">
+                        <p>我的移动</p>
+                    </a>
+                </td>
+            </tr>
+      
+        </tbody>
+    </table>
+</div>
+ 
+
+中奖弹出层
+<div class="modal-dialog" id="result" style="display:none">
+  <div class="modal-header">
+  	<button aria-hidden="true" data-dismiss="modal" class="close" type="button" onClick="hideid('result')"> × </button>
+    <h4 id="myModalLabel" class="modal-title"> 中奖信息</h4>
+  </div>
+  <div class="modal-body">
+    <p class="popresult" id="resultTxt"></p>
+  </div>
+  <div class="modal-footer">
+    <button data-dismiss="modal" class="btn " type="button" id="resultGo" >确定</button>
+  </div>
+</div>
+登录弹出层
+<div class="modal-dialog" style="display: none;" id="tcc">
+  <div class="modal-header"> 
+    <button aria-hidden="true" data-dismiss="modal" class="close" type="button" onClick="hideid('tcc')"> × </button>
+    <h4 id="myModalLabel" class="modal-title"> 请先登录 </h4>
+  </div>
+  <div class="modal-body">
+    <div class="mt10">
+      <input class="input-hqyzm" placeholder="请输入您的手机号码" type="tel" maxlength="11" id="mobilePhone" name="mobilePhone" onkeypress="return IsNum(event);" onkeyup="change('mobilePhone',this.value);">
+      <button type="button" class="btn-hqyzm" onclick="sendVCode();" id="check_start1" >获取动态验证码</button>
+      <!--<input type="button" id="check_start1" class="login_yzm" value="点击发送验证码" onclick="sendVCode();"/>-->
+    </div>
+    <div class="mt10">
+    <input class="input-mm" type="tel" id="vCode" name="vCode" placeholder="请输入短信验证码" maxlength="6" onkeypress="return IsNum(event);" onkeyup="change('vCode',this.value);"/>
+    </div>
+  </div>
+  <div id="showMsg" style="color:#f00; text-align: center; margin-bottom: 5px;display: none;" >
+  	<span id="failmess"></span>
+  </div>
+  <div class="modal-footer">
+    <button data-dismiss="modal" class="btn" onclick="formSubmit();" type="button" >登录 </button>
+  </div>
+</div>
+<script src="${ctx}/css/choujiang/js/jquery.rotate.min.js"></script> 
+<script src="${ctx}/css/choujiang/js/jquery.easing.min.js"></script> 
+<script>
+$(function(){
+	var $rotaryArrow = $('#rotaryArrow');
+	var $rotaryStart = $('#start');
+	var $result = $('#result');
+	var $resultTxt = $('#resultTxt');
+	//var $rotaryStop = $('#rotaryStop');
+	
+	
+	function tzzd(status,message){
+		<#if !USER_MOBILE??>
+			showid('tcc');
+			return;
+		<#else>
+			<#if isAble??>
+				<#if isAble=="able">
+					//data = Math.floor(Math.random()*9);
+					switch(status){
+						case '1': 
+							rotateFunc(1,22.5,' 恭喜!您获得<em>iPhone 6</em> 手机');
+							break;
+						case '2': 
+							rotateFunc(2,337.5,'恭喜!您获得<em>50元购机券</em> ');
+							break;
+						case '3': 
+							rotateFunc(3,292.5,'恭喜!您获得<em>300M流量</em> ');
+							break;
+						case '4': 
+							rotateFunc(4,260,'恭喜!您获得<em>100M流量</em> ');
+							break;
+						case '5': 
+							rotateFunc(5,100,'恭喜!您获得<em>咪咕音乐定向流量包5元500M</em>');
+							break;
+						case '6': 
+							rotateFunc(6,100,'恭喜!您获得<em>和动漫定向流量包5元500M</em>');
+							break;
+						case '7': 
+							rotateFunc(7,100,'恭喜!您获得<em>和视频定向流量包10元1G</em>');
+							break;
+						case '8': 
+							rotateFunc(8,202.5,'恭喜!您获得<em>30M流量</em>');
+							break;
+						case '9': 
+							rotateFunc(9,157.5,'恭喜!您获得<em>10M流量</em>');
+							break;
+						case '0': 
+							rotateFunc(0,67.5,'恭喜您获得4G大容量SIM卡一张，请您到就近的营业厅免费领取！');
+							break;
+						default:
+							rotateFunc(0,0,message);
+					}
+				</#if>
+			</#if>
+		</#if>
+	}
+	//$rotaryStop.click(function(){
+		
+	//});
+	var msgReturn="";
+	var flag="";
+	var msgDetail="";
+	$rotaryStart.click(function(){
+		<#if !USER_MOBILE??>
+			showid('tcc');
+			return;
+		<#else>
+			<#if isAble??>
+				<#if isAble=="able">
+					if(msgReturn=="wait"){
+						return;
+					}else if(msgReturn=="" || msgReturn=="sysError" ){
+						rotateFunc1();
+						msgReturn="wait";
+					}else if(msgReturn=="unLogin" || msgReturn=="overTop" || msgReturn=="noFirst" || msgReturn=="limitTop" || msgReturn=="notEnough"){
+						$("#resultTxt").html(msgDetail);
+						showid("result");
+						return;
+					}
+					$.ajax({
+						url:"${ctx}/rotate/startPlay",
+						type:"post",
+						dataType : "json",
+						data:"",
+						success:function(msg){
+							flag="";
+							if(msg.status=="unLogin" || msg.status=="overTop" || msg.status=="noFirst" || msg.status=="limitTop" || msg.status=="notEnough"){
+								//$("#resultTxt").html(msg.message);
+								//showid("result");
+								msgReturn=msg.status;
+								msgDetail=msg.message;
+							}else if(msg.status=="sysError"){
+								msgReturn="sysError";
+							}else{
+								//参与成功的设置为noFirst
+								msgReturn="noFirst";
+								msgDetail="本期抽奖活动每人每天只能参与一次！";
+							}
+							tzzd(msg.status,msg.message);
+						},
+						error:function(){
+							msgReturn="sysError";
+							tzzd("sysError","参与人数过多，请稍候再试！");
+							//$("#showMsg").show();
+							//$("#failmess").html("参与人数过多，请稍候再试！");
+						}
+					});
+				<#elseif isAble=="overTop" >
+					$("#resultTxt").html("本期抽奖活动期间每人最多中奖二次！");
+					showid("result");
+				<#elseif isAble=="noFirst" >
+					$("#resultTxt").html("本期抽奖活动每人每天只能参与一次！");
+					showid("result");
+				<#elseif isAble=="sysError" >
+					$("#resultTxt").html("参与人数过多，请稍候再试！");
+					showid("result");
+				<#elseif isAble=="unLogin" >
+					$("#resultTxt").html("请先登录后再进行抽奖！");
+					showid("result");
+				</#if>
+			</#if>
+		</#if>
+	});
+	
+	var rotateFunc1 = function(){  //awards:奖项，angle:奖项对应的角度
+		$rotaryArrow.rotate({
+			angle: 0,
+			duration: 120000,
+			animateTo:36000000000000  //angle是图片上各奖项对应的角度，1440是让指针固定旋转4圈
+		});
+	};
+	
+	var rotateFunc = function(awards,angle,text){  //awards:奖项，angle:奖项对应的角度
+		$rotaryArrow.rotate({
+			angle: 0,
+			duration: 6000,
+			animateTo: angle + 3600,  //angle是图片上各奖项对应的角度，1440是让指针固定旋转4圈
+			easing:function (x,t,b,c,d){
+				return -c*((t=t/d-1)*t*t*t-1)+b ;
+			},
+			callback: function(){
+				$resultTxt.html(text);
+				showid("result");
+			}
+		});
+	};
+ 	$("#resultGo").click(function(){
+		hideid('result');
+		//$(".awardTips span>em").html($("#resultTxt").html());
+	});
+});
+ 
+</script> 
+
+<script>
+
+//弹出层
+function showid(idname){
+	var newbox = document.getElementById(idname);
+	newbox.style.zIndex = "9999999";
+	newbox.style.display = "block"
+	newbox.style.position = "fixed" ;
+	newbox.style.top = newbox.style.left = "50%";
+	newbox.style.marginTop = -newbox.offsetHeight / 2 + "px";
+	newbox.style.marginLeft = -newbox.offsetWidth / 2 + "px";
+	var layer = document.createElement("div");
+	layer.id = "layer";
+	layer.style.width = layer.style.height = "100%";
+	layer.style.position =  "fixed" ;
+	layer.style.top = layer.style.left =layer.style.right =layer.style.bottom= 0;
+	layer.style.backgroundColor = "#000";
+	layer.style.zIndex = "9999998";
+	layer.style.opacity = "0.5";
+	document.body.appendChild(layer);
+	window.onresize=function (){newbox.style.marginTop = -newbox.offsetHeight / 2 + "px";
+	newbox.style.marginLeft = -newbox.offsetWidth / 2 + "px";	}
+	window.ontouchmove=function(e){
+           e.preventDefault && e.preventDefault();
+           e.returnValue=false;
+           e.stopPropagation && e.stopPropagation();
+           return false;
+    }   
+}
+	
+function hideid(idname){
+	var newbox = document.getElementById(idname);
+	newbox.style.display = "none";
+	var layer = document.getElementById("layer");
+	document.body.removeChild(layer);
+	window.ontouchmove=function(e){
+      e.preventDefault && e.preventDefault();
+      e.returnValue=true;
+      e.stopPropagation && e.stopPropagation();
+      return true;
+    }
+}
+</script>
+ <!-- -->
+</body>
+</html>

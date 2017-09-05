@@ -1,0 +1,169 @@
+<#escape x as x?html>
+
+<script type="text/javascript" src="${ctx}/js/sinova/executetime/executetime.js"></script>
+
+<p>
+	<form class="form" id="searchForm" name="searchForm" action="${ctx}/executetime/list" method="post">
+		<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+		<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+		<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+		
+		<div class="col-sm-3 inp_1">
+		    <div class="input-group">
+		      <div class="input-group-addon"><b>类名</b></div>
+			  <input class="inp_2" type="text" id="className_" name="className" value="${(executeTime.className)!''}" placeholder="类名" />
+		    </div>
+		</div>
+				
+		<div class="col-sm-3 inp_1">
+		    <div class="input-group">
+		      <div class="input-group-addon"><b>调用时间</b></div>
+			  <!--  <input class="inp_2" type="text" id="regionName_" name="regionName" value="${(region.regionName)!''}" placeholder="地市名称"/>-->
+			  <input class="inp_2" type="text" id="callTime_" name="callTime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" readonly="readonly" value="${(executeTime.callTime)!''}" placeholder="调用时间"/>
+		    </div>
+		</div>
+		
+		<div class="col-sm-3 inp_1">
+		    <div class="input-group">
+		      <div class="input-group-addon"><b>用户账号</b></div>
+			  <input class="inp_2" type="text" id="account_" name="account" value="${(executeTime.account)!''}" placeholder="用户帐号"/>
+		    </div>
+		</div>
+		
+		<div class="col-sm-3 inp_1">
+		   	<a href="javascript:mySubmitForm('searchForm');" class="btn btn-purple btn-sm">
+				查询 <i class="ace-icon fa fa-search icon-on-right bigger-10"></i>
+			</a>
+		</div>   
+	</form> 
+</p>
+				
+<p>
+	<div class="btn-group">
+		<@shiro.hasPermission name="/executetime/delete" >
+		<button onclick="deleteQrcode();" class="btn btn-sm  btn-danger">
+			 删除
+		</button>
+		</@shiro.hasPermission>
+	</div>
+</p>
+
+<div class="row">
+	<div class="col-sm-12 sub_left_menu ">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>类名</th>
+					<th>方法名</th>
+					<th>耗时</th>
+					<th>调用时间</th>
+					<th>手机号</th>
+					<th>用户账号</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			<#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+			
+				<#list returnDatas.data as _data>
+						<tr id="${(_data.id)!''}">
+						
+							<td>
+									${(_data.className)!''}
+							</td>
+							<td>
+									${(_data.methodName)!''}
+							</td>
+							<td>
+									${(_data.timeConsume)!''}
+							</td>
+							<td>
+									${(_data.callTime)!''}
+							</td>
+							<td>
+									${(_data.mobile)!''}
+							</td>
+							<td>
+									${(_data.account)!''}
+							</td>
+						
+						</tr>
+				</#list>
+			</#if>
+			</tbody>
+		</table>
+		
+		<#if returnDatas.page??>
+			<@h.pagetoolbar page=returnDatas.page formId='searchForm' />
+		</#if>
+	</div>
+	
+	<div class="col-sm-12 last sub_content">
+		<form class="well form-horizontal clearfix" id="updateForm" name="updateForm" action="${ctx}/executetime/update" method="post">
+			<!--input hidden Start-->
+				<input type="hidden" id="id" name="id" />	
+			<!--input hidden End-->
+			
+				<div class="form-group col-xs-12">
+					<label class="col-sm-4 control-label" for="className">类名：</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="text" id="className" name="className" placeholder="类名" />
+						</div>
+				</div>
+				<div class="form-group col-xs-12">
+					<label class="col-sm-4 control-label" for="methodName">方法名：</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="text" id="methodName" name="methodName" placeholder="方法名" />
+						</div>
+				</div>
+				<div class="form-group col-xs-12">
+					<label class="col-sm-4 control-label" for="inputParam">入参串：</label>
+						<div class="col-sm-8">
+							<textarea class="form-control" type="text" id="inputParam" name="inputParam" rows="5" placeholder="入参串" />
+						</div>
+				</div>
+				<div class="form-group col-xs-12">
+					<label class="col-sm-4 control-label" for="outputParam">出参串：</label>
+						<div class="col-sm-8">
+							<textarea class="form-control" type="text" id="outputParam" name="outputParam" rows="5" placeholder="出参串" />
+						</div>
+				</div>
+				<div class="form-group col-xs-12">
+					<label class="col-sm-4 control-label" for="timeConsume">耗时：</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="text" id="timeConsume" name="timeConsume" placeholder="耗时" />
+						</div>
+				</div>
+				<div class="form-group col-xs-12">
+					<label class="col-sm-4 control-label" for="callTime">调用时间：</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="datetime"callTime" name="callTime" placeholder="调用时间" />
+						</div>
+				</div>
+				<div class="form-group col-xs-12">
+					<label class="col-sm-4 control-label" for="remark">备注：</label>
+						<div class="col-sm-8">
+							<textarea class="form-control" type="text" id="remark" name="remark" rows="5" placeholder="备注" />
+						</div>
+				</div>
+				<div class="form-group col-xs-12">
+					<label class="col-sm-4 control-label" for="mobile">手机号：</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="text" id="mobile" name="mobile" placeholder="手机号" />
+						</div>
+				</div>
+				<div class="form-group col-xs-12">
+					<label class="col-sm-4 control-label" for="account">用户账号：</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="text" id="account" name="account" placeholder="用户账号" />
+						</div>
+				</div>
+			
+		</form>
+	</div>
+		
+</div>
+
+</#escape>
+
+

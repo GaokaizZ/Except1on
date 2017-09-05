@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+		<@h.head />
+<body class="bg_cff">
+<script type="text/javascript">
+	function reSet(){
+		var officeName = $("#officeName").val("");
+		var exName = $("#exName").val("");
+	}
+	//查询
+function mySubmitForm(formId,_target){
+	//分页
+	if (typeof(_target) == "undefined" || _target == "") { 
+	   
+		}else{
+			$("#pageIndex").val("1");
+		}
+	$("#"+formId).submit();
+}
+</script>
+<div class="mainBox">
+  <div class="route"><span>二维码</span>&nbsp;&gt;&nbsp;<span >批量外链二维码报表</span></div>
+  <form id="searchForm" name="searchForm" action="${ctx}/exQrcode/report" method="post">
+  	<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+	<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+	<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+  <table width="100%" cellspacing="0" cellpadding="0" border="0" class="tb_searchbox mt20 bord_gray">
+    <tbody>
+      <tr>
+	 <td>二维码名称：
+		<input class="input_normal w160" name="exName" id="exName" value="${(exQrcode.exName)!''}"/>
+       <!-- 	营业员：
+          <input class="input_normal w160" name="officeName" id="officeName" value="${(exQrcode.officeName)!''}"/> -->
+        <span class="mr20"><a href="javascript:mySubmitForm('searchForm','CL');" class="bt_blue"><span>查询</span></a></span>
+        <span class="mr20"><a href="javascript:reSet();" class="bt_blue"><span>重置</span></a></span>
+       </td>
+      </tr>
+    </tbody>
+  </table>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mt15 tb_content1">
+    <tr>
+      <th>二维码名称 </th>
+      <th>网址名称</th>
+      <th>访问量</th>
+      <th>营业员</th>
+      <th>所属营业厅</th>
+      <th>所在地市</th>
+    </tr>
+    <#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+		<#list returnDatas.data as _data>
+	    <tr>
+	      <td>${(_data.exName)!''}</td>
+	      <td><span title="${(_data.exUrl)!''}">${(_data.spare1)!''}</span></td>
+	      <td>${(_data.spare3)!'0'}</td>
+	      <td>${(_data.userName)!''}</td>
+	      <td>${(_data.officeName)!''}</td>
+	      <td>${(_data.regionName)!''}</td>
+	    </tr>
+	    </#list>
+   </#if>
+  </table>
+  <!-- 分页 -->
+  	<#if returnDatas.page??>
+		<@h.pagetoolbar page=returnDatas.page formId='searchForm' />
+	</#if>
+  </form>	
+</div>
+
+
+</body>
+</#escape>

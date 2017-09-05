@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" style=" overflow-x:auto; overflow-y:auto;">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<link rel="stylesheet" type="text/css" href="${ctx}/css/sinova/base.css"/>
+<link rel="stylesheet" type="text/css" href="${ctx}/css/sinova/public.css"/>
+<link rel="stylesheet" type="text/css" href="${ctx}/css/sinova/home.css"/>
+<script src="${ctx}/js/sinova/back/title.js" type="text/javascript"></script>
+<script src="${ctx}/js/sinova/back/login.js" type="text/javascript"></script>
+<script src="${ctx}/js/sinova/back/base64.js" type="text/javascript"></script>
+<script src="${ctx}/js/sinova/back/jquery-1.7.2.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div class="loginBg">
+	<div class="loginBox">
+    	<div class="login">
+        <div class="loginTable">
+        <form action="login" method="post"  id="loginForm" name="loginForm" >
+        	<span class="red" id="failmess">系统已接入4A,请使用4A账号密码登录，谢谢</span><br/>
+        	<span class="red" id="failmess">${message!'输入登录信息'}</span>
+        	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+              	<td align="right" width="90">登录名：</td>
+                <td><span class="lgntext"><input type="text" name="account" id="account" maxlength="20"></span></td>
+              </tr>
+              <tr>
+              	<td align="right">密　码：</td>
+                <td><span class="lgntext"><input type="password" name="password" id="password" maxlength="20"></span></td>
+              </tr>
+               <tr>
+           <!--     	<td align="right">短信验证码：</td>
+                <td class="middle"><span class="lgntext2"><input type="text" name="phone" id="phone" maxlength="6"></span><input type="button" id="check_start1" class="login_yzm" value="点击发送验证码" onclick="sendVCode();"/></td>
+              </tr>
+             <tr>
+              	<td align="right">验证码：</td>
+                <td class="middle"><span class="lgntext2"><input type="text" name="captcha" maxlength="4" id="captcha"></span><img id="captchaImg" src="${ctx}/getCaptcha" width="77" height="22" class="ml10 hand"  onclick="reloadValidateCode();"/></td>
+               <input type="hidden" id="ValidateCodeNum" value="" /> 
+              </tr> -->
+              <tr>
+              	<td align="right">&nbsp;</td>
+<!--              	formSubmit-->
+                <td><a href="javascript:void(0);" class="loginBtn font14 mr20" onclick="validateUser();">登录</a><a href="javascript:void(0);" onclick="cleanInput();" class="resetBtn font14">重置</a></td>
+              </tr>
+            </table>
+            </form>
+        </div>
+        </div>
+    </div>
+    </div>
+
+<div class="cover" id="cover" ></div>
+<div style="width: 300px;" id="validateMsg" class="pop">
+	<div class="popTitle"><span onclick="hide('cover','validateMsg');$('#phoneCode').val('');" class="close fr"></span><strong class="font14 fl">信息提示</strong>
+    	<div class="clear"></div>
+  	</div>
+  	<div class="mt25 mb25">
+      	<p class="text_c mt10">请输入短信验证码：<input type="text" name="phoneCode" id="phoneCode" maxlength="6"></p>
+  	</div>
+ 	<div align="center"> 
+ 	<!-- <span class="red" style="font-size: 10px">短信验证码10分钟内有效</span></div> --> 
+  	<div class="text_c mt10 mb10"><a onclick="hide('cover','validateMsg');validateCode();" class="mr10 bt_blue" href="javascript:;"><span>确定</span></a></div>
+<!--  	<div class="text_c mt10 mb10"><a onclick="hide('cover','validateMsg');show('cover','validateCg')" class="mr10 bt_blue" href="javascript:;"><span>确定</span></a></div>-->
+</div>
+<div style="width: 300px;" id="validateCg" class="pop">
+  	<div class="popTitle"><a onclick="hide('cover','validateCg')" class="close fr" href="javascript:;"></a><strong class="font14 fl">提示</strong>
+    	<div class="clear"></div>
+  	</div>
+  	<div class="mt25 mb25">
+    	<p class="text_c">提交成功！</p>
+  	</div>
+  	<div class="text_c mt10 mb10"><a onclick="hide('cover','validateCg')" class="mr10 bt_blue" href="index.html"><span>确定</span></a></div>
+</div>
+    
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+		<@h.head />
+
+<script type="text/javascript"> 
+//批量生成二维码
+var a=1;
+function createQrcode(){
+	jQuery("#span1").text('正在生成，请等待……');
+	if(a==1){
+		a=0;
+		jQuery.post(ctx + "/createQrcode/piliang",
+				function(_json) {
+					if (_json.status == "success") {
+						alert(_json.message);
+						jQuery("#span1").text('生成');
+						$("#href1").attr("href","#");
+						$("#href1").attr("class","bt_gray");
+						a=1;
+					} else {
+						a=1;
+						alert(_json.message);
+						jQuery("#span1").text('生成');
+						$("#href1").attr("href","#");
+						$("#href1").attr("class","bt_gray");
+					}
+		});
+		
+	}else{
+		alert("不能重复提交");
+	}
+}
+
+
+//导出多条
+function expMore(){
+	
+	url = ctx + "/createQrcode/export";
+	window.location.href = url;
+
+}
+//	 $("#href1").attr({href:"#",class:"bt_gray"});
+</script>
+<style>
+a.bt_gray{ background:url(images/gray.gif) right -47px #6c6b6b no-repeat;  display: inline-block;  height: 25px; padding-right:14px; cursor:pointer;}
+a.bt_gray span{ background:url(images/gray.gif) #6c6b6b left top no-repeat; display: inline-block;  height: 25px; line-height:24px; padding-left: 14px; color:#fff}
+</style>
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>批量生成二维码</span></div>
+  <input type="hidden" name="workno" id="workno" value="${(workno)!''}"/>
+ <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tb_searchbox mt20 bord_gray">
+    <tr>
+      <td>
+       生 成 专 属 二 维 码
+      </td>
+      <td>
+      	<span class="mr20">
+	      	<a id="href1" href="javascript:createQrcode();" class="bt_blue"><span id="span1">生成</span></a>
+	    </span>
+      </td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</#escape>

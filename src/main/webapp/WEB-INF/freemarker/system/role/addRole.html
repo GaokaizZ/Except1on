@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- sco.js -->
+<link href="${ctx}/js/coms/sco/css/scojs.css" rel="stylesheet" />
+<script type="text/javascript" src="${ctx}/js/coms/sco/js/sco.ajax.js"></script>
+<script type="text/javascript" src="${ctx}/js/system/role/modal.js"></script>
+<link rel="stylesheet" href="${ctx}/js/coms/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css"/>
+<script type="text/javascript" src="${ctx}/js/coms/ztree/js/jquery.ztree.all-3.5.js"></script>
+<script type="text/javascript" src="${ctx}/js/system/role/role.js"></script>
+<script type="text/javascript">
+//重置
+function cleanss(){
+	$("#code").val("");
+	$("#name").val("");
+	$("#menuNames").val("");
+	$("#select").val("");
+	$("#remark").val("");
+}
+</script>
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route">二维码直通车&nbsp;&gt;&nbsp;<span>角色管理</span></div>
+  <div class="mt10 mb10">
+  	<a class="mr10 bt_blue"  href="javascript:history.go(-1)"><span>返回</span></a>
+  	<a class="mr10 bt_blue" href="javascript:void(0);" onclick="cleanss();"><span>重置</span></a>
+  	<a class="mr10 bt_blue" href="javascript:void(0);" onclick="saveRole();"><span>保存</span></a>
+  </div>
+  <div class="bord_gray padd_10 pb30">
+   
+    <div class="mt10">
+      <p class="fl leftName middle"><span class="red">*</span>角色编号： </p>
+      <div class="fl rightInfo middle">
+        <input class="text_1" type="text" id="code" name="code"/>必填（数字或字母）
+      </div>
+      <div class="clear"></div>
+    </div>
+    
+    <div class="mt10">
+      <p class="fl leftName middle"><span class="red">*</span>角色名称： </p>
+      <div class="fl rightInfo middle">
+        <input class="text_1" type="text" id="name" name="name"/>必填（汉字或字母）
+      </div>
+      <div class="clear"></div>
+    </div>
+   
+     <div class="mt10">
+      <p class="fl leftName middle">权限菜单：</p>
+      <div class="fl rightInfo middle">
+      		<input class="text_1" name="menuNames" id="menuNames" type="text"  readonly="readonly"/>
+			<input name="menuIds"  id="menuIds" type="hidden"  />
+			<span class="input-group-btn">
+				<a onclick="showMenuModal();" class="ml10 bt_blue"><span>选择</span></a>
+			</span>
+      </div>
+      <div class="clear"></div>
+    </div>
+   
+    <div class="mt10">
+      <p class="fl leftName middle">备注：</p>
+      <div class="fl rightInfo middle">
+      		<textarea cols="60" rows="5" name="remark" id="remark" runat="server"></textarea>
+      </div>
+      <div class="clear"></div>
+    </div>
+    
+  </div>
+  <!--按钮 开始-->
+  	<div class="mt10 mb10">
+  		<a class="mr10 bt_blue"  href="javascript:history.go(-1)"><span>返回</span></a>
+  		<a class="mr10 bt_blue" href="javascript:void(0);" onclick="cleanss();"><span>重置</span></a>
+  		<a class="mr10 bt_blue" href="javascript:void(0);" onclick="saveRole();"><span>保存</span></a>
+  	</div>
+  <!--按钮 结束-->
+</div>
+
+<!--弹出层-->
+<div class="cover" id="cover" ></div>
+<div style="width: 500px; " id="tcccd" class="pop">
+  <div class="popTitle"><span onclick="hide('cover','tcccd')" class="close fr"></span><strong class="font14 fl">选择菜单</strong>
+    <div class="clear"></div>
+  </div>
+  <div class="mt25 mb25 ">
+  <div style=" height:160px; margin:0 auto" class="shuBox bord_gray " id="menuListTree" ></div>
+  
+  </div>
+  <div class="text_c mt10 mb10"><a onclick="queding();" class="mr10 bt_blue" href="javascript:;"><span>确定</span></a><a onclick="hide('cover','tcccd')" class="mr10 bt_blue" href="javascript:;"><span>取消</span></a></div>
+</div>
+
+</body>
+</#escape>

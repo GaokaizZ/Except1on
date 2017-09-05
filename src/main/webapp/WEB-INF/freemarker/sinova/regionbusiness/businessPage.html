@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="${ctx}/js/sinova/business/business.js"></script>
+<script type="text/javascript">
+//添加未分配的业务到地市
+function addRegionBusiness(){
+	var regionId = jQuery("#regionId").val();
+	var regionName = jQuery("#regionName").val();
+	var records="";
+	jQuery("input[name='check_li']:checkbox:checked").each(function(){ 
+		records+=$(this).val()+",";
+	}); 
+	records=records.substring(0, records.length-1);
+    if (records=="") {
+        alert("未选中任何记录!");
+        return;
+    }else{
+    	$.ajax({
+		url:ctx + "/regionbusiness/save",
+		type:"post",
+		data:"records="+records+"&regionId="+regionId,
+		dataType:"text",
+		success:function(msg){
+			if(msg=="0"){
+				alert("恭喜你！添加成功。");
+				window.location.href = ctx+"/regionbusiness/buslist?regionId="+regionId+"&regionName="+encodeURIComponent(encodeURIComponent(regionName));
+			}else{
+				alert("添加失败");
+			}
+		},
+		error:function(){
+			alert("添加失败，请稍后再试！");
+		}
+		});
+    }
+}
+</script>
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>地市业务管理</span></div>
+  <form method="post"  action="${ctx}/regionbusiness/businessPage"  name="searchForm" id="searchForm">
+		<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+		<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}"  />
+		<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}"  />
+  		<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tb_searchbox mt20 bord_gray">
+    		<tr>
+      			<td>地市名称：<input class="input_normal w160"  type="text" id="regionName" name="regionName" value="${(regionName)!''}" readonly="readonly"/>
+      			<input class="input_normal w160"  type="hidden" id="regionId" name="regionId" value="${(regionId)!''}" />
+      			</td>
+    		</tr>
+  		</table>
+  <p class="overflow mt10">
+  		<a class="bt_blue ml10 fr" onclick="addRegionBusiness();"><span>添加业务</span></a>
+  		<a class="mr10  fr  bt_blue" href="javascript:history.go(-1)"><span>返回</span></a>
+  </p>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mt15 tb_content1" style="border-collapse:collapse;empty-cells:hide">
+    <tr>
+      <th width="30"><input name="ids" id="ids" type="checkbox" /></th>
+      <th>业务编号 </th>
+      <th>业务名称</th>
+      <th>上/下架</th>
+    </tr>
+    <#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+	<#list returnDatas.data as _data>
+    <tr id="${(_data.id)!''}">
+		<td><input name="check_li"   type="checkbox" value="${(_data.id)!''}" /></td>
+		<td>${(_data.busCode)!''}</td>
+		<td>${(_data.busName)!''}</td>
+		<td>
+			<#if "${(_data.upDown)!''}"= '1'>已上架 </#if>
+			<#if "${(_data.upDown)!''}"= '0'>已下架</#if>
+		</td>
+	</tr>
+    </#list>
+	</#if>
+  </table>
+  <!-- 分页 -->
+  	<#if returnDatas.page??>
+		<@h.pagetoolbar page=returnDatas.page formId='searchForm' />
+	</#if>
+  </form>
+</div>
+</body>
+</#escape>

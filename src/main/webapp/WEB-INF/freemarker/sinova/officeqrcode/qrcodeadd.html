@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+		<@h.head />
+
+<link rel="stylesheet" href="${ctx}/js/coms/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css"/>
+<script type="text/javascript" src="${ctx}/js/coms/ztree/js/jquery.ztree.all-3.5.js"></script>
+<script type="text/javascript">
+<!--
+	var ctx = "${ctx}";
+	var menuMultiSelectSetting = {
+		expandAll:true,
+		
+		check: {
+			enable: true,
+			chkStyle: "checkbox",
+			chkboxType: { "Y" : "ps", "N" : "ps" }
+		},
+		data : {
+		
+			key:{
+				name: "goodsName",
+				title:"goodsName"
+			},
+			simpleData : {
+				enable : true,
+				idKey : "goodsCode",
+				pIdKey : "businessCode",
+				rootPId : ""
+			},
+			showTitle:true			
+		}
+	};
+	$(document).ready(function(){
+		
+		jQuery.post("${ctx}/qrcode/officetree",
+			function(_json) {
+				if (_json.status == "success") {
+					$.fn.zTree.init($("#menuMultiSelectTree"), menuMultiSelectSetting,_json.data);
+				} else {
+					alert(_json.message);
+				}
+			});
+	});
+	
+	var a=1;
+	function saveOfficeQrcode(){
+		if(a==1){
+		a=0;
+		var codeName =jQuery("#qrcodeName_").val();
+		if(codeName==null||codeName==""){
+			alert('二维码名称不能为空!');
+			a=1;
+	        return;
+		}
+		 var treeObj = $.fn.zTree.getZTreeObj("menuMultiSelectTree");
+		   var nodes = treeObj.getCheckedNodes(true);
+		   var msg = "";
+		   for (var i = 0; i < nodes.length; i++) {
+		       msg += nodes[i].goodsCode+":"+nodes[i].businessCode+",";
+		   }
+		if(msg==null||msg==""){
+			alert('请选择对应的业务或产品!');
+			a=1;
+	        return;
+		}
+		jQuery.post(ctx + "/qrcode/officeqrcode",{business:msg,qrcodeName:codeName},
+				function(_json) {
+					if (_json.status == "success") {
+						a=1;
+						var path =_json.data;
+						jQuery("#qrcodePic").attr("src",ctx+path);
+					} else {
+						a=1;
+						alert(_json.message);
+					}
+		});
+	}else{
+		alert("不能重复提交");
+	}
+	}
+	
+//-->
+</script>
+
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>二维码生成</span></div>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tb_searchbox mt20 bord_gray">
+    <tr>
+      <td>
+        二维码名称：
+        <input class="input_normal w160" type="text" id="qrcodeName_" name="qrcodeName" />
+        
+	      <span class="mr20">
+	      	<a href="javascript:saveOfficeQrcode();" class="bt_blue"><span>生成</span></a>
+	      </span>
+	      <span  class="red">左侧输入内容，点击生成二维码</span>
+      </td>
+    </tr>
+  </table>
+  
+  <table width="60%" border="0" cellspacing="0" cellpadding="0" class="mt15 tb_content1">
+    <tr>
+      <td  style="text-align:left; padding:10px;" width="40%"><strong>业务与商品:</strong><br/>
+      <ul id="menuMultiSelectTree" class="ztree"></ul>
+      </td>
+      <td style="text-align:center;"><img id="qrcodePic" name="qrcodePic" src="${ctx}/images/1.jpg"/></td>
+    </tr>
+    <!-- 业务商品树 -->
+    <tr>
+    </tr>
+  </table>
+ 
+</div>
+
+</body>
+</#escape>

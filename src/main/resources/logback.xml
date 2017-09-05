@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration >
+    <!-- 
+	<property name="LOG_ROOT" value="E:/log" />
+     -->
+	<property name="LOG_ROOT" value="${LOG_ROOT_DIR}" />
+	<property name="COMMON_PATTERN" value="[%d] %-5p [%thread] %c:%L - %m%n" />
+	
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${COMMON_PATTERN}</pattern>
+		</encoder>
+	</appender>
+	<appender name="rootlog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${LOG_ROOT}/rootlog.log</File>
+		<encoder>
+			<pattern>${COMMON_PATTERN}</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_ROOT}/rootlog_%d{yyyy-MM-dd}.log</fileNamePattern>
+		</rollingPolicy>
+	</appender>
+	<appender name="sqlslowlog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${LOG_ROOT}/sqlslowlog.log</File>
+		<encoder>
+			<pattern>${COMMON_PATTERN}</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_ROOT}/sqlslowlog_%d{yyyy-MM-dd}.log</fileNamePattern>
+		</rollingPolicy>
+	</appender>
+	<appender name="qrcodehalllog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${LOG_ROOT}/qrcodehalllog.log</File>
+		<encoder>
+			<pattern>${COMMON_PATTERN}</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_ROOT}/qrcodehalllog_%d{yyyy-MM-dd}.log</fileNamePattern>
+		</rollingPolicy>
+		<!-- 
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>DEBUG</level> 
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		 -->
+	</appender>
+	
+	<logger name="com.alibaba.druid.filter.stat.StatFilter" additivity="false" level="DEBUG">
+		<appender-ref ref="console" />
+		<appender-ref ref="sqlslowlog" />
+	</logger>
+	<logger name="org.springrain" additivity="false" level="DEBUG">
+		<appender-ref ref="console" />
+		<appender-ref ref="qrcodehalllog" />
+    </logger>
+    
+	<root level="ERROR">
+		<appender-ref ref="console" />
+		<appender-ref ref="rootlog" />
+	</root>
+</configuration>
+

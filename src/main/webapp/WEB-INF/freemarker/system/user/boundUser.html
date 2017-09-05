@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<script type="text/javascript">
+jQuery(document).ready(function(){
+$("#ids").click(function(){
+		if($(this).prop("checked")){
+			$("input[name='check_li']").each(function(){ 
+				 $(this).prop("checked","true");
+			}) 
+		}else{
+			$("input[name='check_li']").each(function(){ 
+				$(this).removeAttr("checked");
+			}) 
+		}
+	});
+	
+	$("input[name='check_li']").click(function(){
+		var flag=$(this).prop("checked");
+		if(flag){
+			flag=checkCheckBox(flag);
+			if(flag){
+				$("#ids").prop("checked","true");
+			}
+		}else{
+			$("#ids").removeAttr("checked");
+		}
+	});
+});
+function checkCheckBox(flag) {
+	if(flag){
+		$("input[name='check_li']").each(function(){
+			if(!$(this).prop("checked")){
+				return flag=false;
+			}
+		})
+	}else{
+		$("input[name='check_li']").each(function(){
+			if($(this).prop("checked")){
+				return flag=true;
+			}
+		})
+	}
+	return flag;
+}
+//查询未分配营业厅的用户(营业厅用户)
+function mySubmitForm(formId,_target){
+	//分页
+	if (typeof(_target) == "undefined" || _target == "") { 
+	   
+		}else{
+			$("#pageIndex").val("1");
+		}
+	$("#"+formId).submit();
+}
+
+function goUserOfficeList(){
+	$("#searchForm").attr("action",ctx+"/useroffice/list");
+	$("#searchForm").submit();
+}
+function boundUser(){
+	var msg = "绑定管理员会取消原先管理员的绑定，是否执行此操作？";
+	if("${(dicRoleCode)!''}" == "ROLE_SUPERMAN"){
+		msg = "绑定地市管理员会取消原先管理员的绑定，是否执行此操作？"
+	}
+	if("${(dicRoleCode)!''}" == "ROLE_REGION_MANAGER"){
+		msg = "绑定营业厅管理员会取消原先管理员的绑定，是否执行此操作？"
+	}
+	if("${(dicRoleCode)!''}" == "ROLE_OFFICE_MANAGE"){
+		msg = "绑定营业员管理员会取消原先管理员的绑定，是否执行此操作？"
+	}
+	
+	
+	if (confirm(msg))  { 
+		var userId = $('input:radio[name=check_li][checked]').val();
+		var dicRoleCode = "${(dicRoleCode)!''}";
+		var regionCode = "${(regionCode)!''}";
+		var countyCode = "${(countyCode)!''}";
+		var officeCode = "${(officeCode)!''}";
+		
+		if(userId == undefined || userId == ""){
+			alert("请选择一个需要绑定权限的用户");return; 
+		}else{
+			var url = ctx + "/system/user/userRoleList/boundUser";
+			$.ajax({
+		    		url:url,
+		    		type:"post",
+					data:{'userId':userId,'dicRoleCode':dicRoleCode,'regionCode':regionCode,'countyCode':countyCode,'officeCode':officeCode},
+		    		dataType:"text",
+		    		success:function(date){
+						var date=eval("("+date+")");
+		    			if(date.status == "1"){
+		    				alert("恭喜你！绑定成功");
+		    				window.location.href = ctx +"/system/user/userRoleList?dicRoleCode=${(dicRoleCode)!''}";
+		    			}else{
+		    				alert("操作失败");
+		    			}
+		    		},
+		    		error:function(){
+		    			alert("系统异常，请稍后再试！");
+		    		}
+		    });
+		}
+	}
+}
+
+</script>
+<body class="bg_cff">
+	<div class="mainBox">
+		<div class="route">
+			<span>二维码直通车</span>&nbsp;&gt;&nbsp;
+			<span>权限绑定</span>
+		</div>
+		<form id="searchForm" name="searchForm" action="${ctx}/system/user/userRoleList/befBoundUser?dicRoleCode=${(dicRoleCode)!''}" method="post">
+			<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+			<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+			<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+			<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tb_searchbox mt20 bord_gray">
+				<tr>
+					<td>
+						用户账号：<input class="input_normal w160" type="text" id="account" name="account" />
+						用户名：<input class="input_normal w160" type="text" id="name" name="name" />
+						<input type="hidden" id="regionCode_" name="regionCode" value="${(regionCode)!''}"/>
+						<input type="hidden" id="countyCode_" name="countyCode" value="${(countyCode)!''}"/>
+						<input type="hidden" id="officeCode_" name="officeCode" value="${(officeCode)!''}"/>
+
+						<span class="mr20"> 
+						<a href="javascript:void(0);" class="bt_blue" onclick="mySubmitForm('searchForm','CL');"><span>查询</span></a>
+						<@shiro.hasPermission name="/useroffice/list" > </@shiro.hasPermission>
+					</td>
+				</tr>
+			</table>
+			
+			<p class="overflow mt10">
+				<#if "${(dicRoleCode)!''}" != 'ROLE_OFFICE_MANAGE'>
+						<a href="javascript:void(0);" onclick="boundUser()" class="ml10 fr bt_blue"><span>绑定</span></a> 
+				</#if>
+				
+				<a href="javascript:void(0);" onclick="window.location.href = '${ctx}/system/user/userRoleList?dicRoleCode=${(dicRoleCode)!''}'" class="ml10 fr bt_blue"><span>返回</span></a> 
+				<@shiro.hasPermission name="/useroffice/save" >
+				</@shiro.hasPermission> 
+			</p>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0" class="mt15 tb_content1" style="border-collapse: collapse; empty-cells: hide">
+				<tr>
+					<th width="30">
+					</th>
+					<th>用户账号</th>
+					<th>用户名称</th>
+					<th>角色</th>
+				</tr>
+				<#if (returnDatas.data??)&&(returnDatas.data?size>0)> <#list returnDatas.data as _data>
+				<tr id="${(_data.id)!''}">
+					<td>
+						<input name="check_li" type="radio" value="${(_data.id)!''}" />
+					</td>
+					<td>${(_data.account)!''}</td>
+					<td>${(_data.name)!''}</td>
+					<td>${(_data.createUser)!''}</td>
+				</tr>
+				</#list></#if>
+			</table>
+			<!-- 分页 -->
+			<#if returnDatas.page??> <@h.pagetoolbar page=returnDatas.page formId='searchForm' /> </#if>
+		</form>
+	</div>
+</body>
+</#escape>

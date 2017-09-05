@@ -1,0 +1,200 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>刮刮卡抽奖活动</title>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" name="viewport">
+<meta name="format-detection" content="telephone=no" />
+<meta name="description" itemprop="description" content="刮刮卡抽奖活动" />
+<meta itemprop="name" content="刮刮卡抽奖活动" />
+<meta itemprop="image" content="${ctx}/images/share/logo.png" />
+<link rel="stylesheet" href="${ctx}/css/frontqrcode/lottery/style.css" />
+<script src="${ctx}/js/sinova/back/jquery-1.7.2.min.js" type="text/javascript"></script>
+<!-- <script src="js/jquery-1.7.2.min.js"></script> -->
+</head>
+<body>
+<div class="bgzs">
+<a href="#hdgz" class="md">
+<img src="${ctx}/images/frontqrcode/lottery/hdgz.png" width="70"></a>
+<div><img src="${ctx}/images/frontqrcode/lottery/ggk.png" width="320"></div>
+<div  style="width:320px; height:161px; margin:20px auto; background-image:url('${ctx}/images/frontqrcode/lottery/ggkbg.png'); background-size:100% 100%; display: -webkit-box;">
+  <canvas></canvas>
+  <a id="start" href="javascript:void(0)" onClick="this.style.display='none'" class="infor"><span class="bnstar">开始刮奖</span></a>
+  <span id="jieguo" class="infor2" style="display:none"></span>
+  </div>
+  <p>${(phone)!'' }，您好</p>
+  <p>已经有${(lotteryCount)!'0' }人参与了，快来<span onClick="show('cover','blcg')">试试手气吧！</span></p>
+</div>
+<div class="bgyellow">
+  <div class="bgl"></div>
+  <div class="adcont">
+    <div class="adtitle" id="hdgz">活动奖品</div>
+    <p>特等奖：华为mate7,共一台；</p>
+    <p>移动数据流量：10MB，50MB，100MB，500MB；</p>
+    <p>本地通话分钟数：10分钟，50分钟，100分钟，500分钟 。</p>
+    <div class="adtitle">活动规则</div>
+    <p>凡在活动期间到山西移动营业厅，通过“二维码直通车”扫二维码成功办理业务，便可以参与“办理业务赠送抽奖”活动。
+      活动奖品立即生效且当月有效。</p>
+    <p class="cred">活动时间：2015年6月1日起至2015年12月31日止</p>
+    <p>本次活动仅限山西移动用户参与。</p>
+    <p class="cred">本次活动的最终解释权归中国移动山西公司所有</p>
+  </div>
+</div>
+<div id="cover"></div>
+<div class="popad" id="blcg">
+  <div class="ti"><img src="${ctx}/images/frontqrcode/lottery/tsxx.png" width="200" class="imgti"></div>
+  <p class="cred f16">尊敬的用户您好，</p>
+  <p>凡在活动期间到山西移动营业厅，通过“二维码直通车”扫二维码<span class="cred">成功办理业务</span>，才可以参与“办理业务赠送抽奖”活动哦，现在去办理吧！ </p>
+  <div class="textcenter"><a onClick="toQrcode();"><img src="${ctx}/images/frontqrcode/lottery/qdbut.png" width="100"></a></div>
+</div>
+<script src="${ctx}/js/sinova/frontqrcode/public.js"></script>
+<script>
+var isShow = "${canlottery}";
+if (isShow=="false") {
+	show('cover','blcg');
+}
+
+var isaccept= "${(isaccept)!''}"
+if (isaccept=='1'){
+		document.getElementById("start").style.display="none";
+   	    var jiangpin = "${(prizeName)!'很遗憾，您没有中奖！'}";
+	    var itext='';
+		document.getElementById("jieguo").style.display="block";
+		
+		 if (jiangpin.indexOf("MB")!=-1) {
+		 	itext="恭喜您，获得<br/>"+jiangpin.substr(0,6)+"<span class='fhz'>"+jiangpin.substr(6,jiangpin.length)+"</span>";
+		 } else if (jiangpin.indexOf("分钟")!=-1){
+		 	itext="恭喜您，获得<br/>"+jiangpin.substr(0,7)+"<span class='fhz'>"+jiangpin.substr(7,jiangpin.length)+"</span>"
+		 } else {
+		 	itext="很遗憾,<br/>您没有抽中奖品!";
+		 }
+       document.getElementById("jieguo").innerHTML=itext;
+}
+
+var bodyStyle = document.body.style; 
+bodyStyle.mozUserSelect = 'none'; 
+bodyStyle.webkitUserSelect = 'none';
+var img = new Image(); 
+var canvas = document.querySelector('canvas'); 
+canvas.style.backgroundColor='transparent'; 
+canvas.style.position = 'absolute'; 
+
+//var imgs =  ['images/10fz.gif','images/50fz.gif','images/100fz.gif','images/500fz.gif','images/10mb.gif','images/50mb.gif','images/100mb.gif','images/500mb.gif','images/xx.gif']; 
+//var num = Math.floor(Math.random()*8); 
+img.src = "${ctx}/images/frontqrcode/lottery/${(prizeImg)!'' }";
+var w = 245, 
+        h = 85; 
+img.addEventListener('load', function(e) { 
+    var ctx; 
+    
+    var offsetX = canvas.offsetLeft, 
+        offsetY = canvas.offsetTop; 
+    var mousedown = false; 
+ 
+    function layer(ctx) { 
+        ctx.fillStyle = '#929292'; 
+        ctx.fillRect(0, 0, w, h); 
+    } 
+ 
+    function eventDown(e){ 
+        e.preventDefault(); 
+        mousedown=true; 
+    } 
+ 
+    function eventUp(e){ 
+        e.preventDefault(); 
+        mousedown=false; 
+    var data = ctx.getImageData(0,0,w,h).data;  
+   
+     
+    for(var i=0,j=0;i<data.length;i+=4){
+        if(data[i] && data[i+1] && data[i+2] && data[i+3]){
+            j++;
+        }
+    }
+	 
+    //当图层被擦除剩余80%时触发
+    if(j<=w*h*0.7){
+    	var opId = "${(opId)!''}";
+    	var rotateId = "${(rotateId)!''}";
+   	    var jiangpin = "${(prizeName)!'很遗憾，您没有中奖！'}";
+	    var itext='';
+		
+		
+		 if (jiangpin.indexOf("MB")!=-1) {
+		 	itext="恭喜您，获得<br/>"+jiangpin.substr(0,6)+"<span class='fhz'>"+jiangpin.substr(6,jiangpin.length)+"</span>";
+		 } else if (jiangpin.indexOf("分钟")!=-1){
+		 	itext="恭喜您，获得<br/>"+jiangpin.substr(0,7)+"<span class='fhz'>"+jiangpin.substr(7,jiangpin.length)+"</span>"
+		 } else {
+		 	itext="很遗憾,<br/>您没有抽中奖品!";
+		 }
+       document.getElementById("jieguo").style.display="block";
+       document.getElementById("jieguo").innerHTML=itext;
+       //办理业务
+       $.ajax({
+			url:"/qrcodehall/qrcodedealing/lottery",
+			type:"post",
+			dataType : "json",
+			data:"opId="+opId+"&rotateId="+rotateId,
+			success:function(msg){
+	   			if(msg.status=="success"){
+	   				//alert("");
+	   				if (jiangpin!="谢谢参与") {
+	   					alert(jiangpin+"已办理成功");
+	   				}
+	   			}else{
+	   				alert(msg.message);
+	   			}
+			},
+			error:function(){
+				alert("正在办理中，请以短信提示为准！");
+			}
+		});
+    }
+    } 
+ 
+    function eventMove(e){ 
+        e.preventDefault(); 
+        if(mousedown) { 
+             if(e.changedTouches){ 
+                 e=e.changedTouches[e.changedTouches.length-1]; 
+             } 
+             var x = (e.clientX + document.body.scrollLeft || e.pageX) - offsetX || 0, 
+                 y = (e.clientY + document.body.scrollTop || e.pageY) - offsetY || 0; 
+             with(ctx) { 
+                 beginPath() 
+                 arc(x, y, 12, 0, Math.PI * 2);//绘制圆点 
+                 fill(); 
+             } 
+        } 
+    } 
+ 
+   canvas.width=w; 
+    canvas.height=h; 
+    canvas.style.backgroundImage='url('+img.src+')'; 
+    ctx=canvas.getContext('2d'); 
+    ctx.fillStyle='transparent'; 
+    ctx.fillRect(0, 0, w, h);//绘制矩形 
+    layer(ctx); 
+ 
+    ctx.globalCompositeOperation = 'destination-out'; 
+ 
+    canvas.addEventListener('touchstart', eventDown); 
+    canvas.addEventListener('touchend', eventUp); 
+    canvas.addEventListener('touchmove', eventMove); 
+    canvas.addEventListener('mousedown', eventDown); 
+    canvas.addEventListener('mouseup', eventUp); 
+    canvas.addEventListener('mousemove', eventMove);
+}
+);
+
+function toQrcode(){
+	hide('cover','blcg');
+	var param = "${(flowNo)!''}";
+	window.location.href = "/qrcodehall/qrcodedealing/forBusiness?param="+param;
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd"
+	default-lazy-init="false">
+
+	<bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">
+		<property name="slowSqlMillis" value="${db.springrain.slowSqlMillis}" />
+		<property name="logSlowSql" value="${db.springrain.logSlowSql}" />
+	</bean>
+
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+		<property name="driverClassName" value="${db.springrain.driver}" />
+		<property name="url" value="${db.springrain.url}" />
+		<property name="username" value="${db.springrain.username}" />
+		<property name="password" value="${db.springrain.password}" />
+		<property name="proxyFilters">
+			<list>
+				<ref bean="stat-filter" />
+			</list>
+		</property>
+
+		<property name="initialSize" value="${db.springrain.initialSize}" />
+		<property name="maxActive" value="${db.springrain.maxActive}" />
+		<property name="maxWait" value="${db.springrain.maxWait}" />
+		<property name="minIdle" value="${db.springrain.minIdle}" />
+		<property name="removeAbandoned" value="${db.springrain.removeAbandoned}" />
+
+		<!-- 关闭abanded连接时输出错误日志 -->
+		<property name="logAbandoned" value="${db.springrain.logAbandoned}" />
+		<property name="removeAbandonedTimeout" value="${db.springrain.removeAbandonedTimeout}" />
+		
+		<property name="testWhileIdle" value="${db.springrain.testWhileIdle}" />
+		<!-- 打开检查,用异步线程evict进行检查 -->
+		<property name="testOnBorrow" value="${db.springrain.testOnBorrow}" />
+		<property name="testOnReturn" value="${db.springrain.testOnReturn}" />
+		
+		<property name="validationQuery" value="${db.springrain.validationQuery}" />
+		<property name="minEvictableIdleTimeMillis" value="${db.springrain.minEvictableIdleTimeMillis}" />
+		<property name="timeBetweenEvictionRunsMillis" value="${db.springrain.timeBetweenEvictionRunsMillis}" />
+		<property name="numTestsPerEvictionRun" value="${db.springrain.numTestsPerEvictionRun}" />
+	</bean>
+
+
+	<!-- 配置namedParameterJdbcTemplate -->
+	<bean id="jdbc" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg ref="dataSource" />
+	</bean>
+
+
+	<!-- 配置jdbcCall 用于调用存储过程和数据库函数 ,不要使用单例模式!!!!!! -->
+	<bean id="jdbcCall" scope="prototype" class="org.springframework.jdbc.core.simple.SimpleJdbcCall">
+		<constructor-arg ref="dataSource" />
+	</bean>
+
+</beans>
+

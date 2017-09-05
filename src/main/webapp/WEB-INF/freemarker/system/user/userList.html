@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="${ctx}/js/system/dicdata/ajaxdicdata.js"></script>
+
+<script type="text/javascript">
+<!--
+var ctx = "${ctx}";
+jQuery(document).ready(function(){
+	// 显示角色的下拉选项	
+	/*$('#roleIds').chosen({allow_single_deselect:true});
+	$(window).on('resize.chosen', function() {
+		var w = $('.chosen-select').parent().width();
+		$('.chosen-select').next().css({'width':w});
+	}).trigger('resize.chosen');
+	
+	//加载级别
+	ajaxDicData("grade","gradeId","","id");
+	
+	//加载角色
+	jQuery.ajax({
+		url : ctx+"/system/role/list/json",
+		type : "post",
+		dataType : "json",
+		success : function(_json) {
+			if(_json.status=="error"){
+				return;
+			}
+			
+			jQuery(_json.data).each(function(i,_obj){
+				jQuery("#roleIds").append("<option value='" + _obj.id + "'>" + _obj.name + "</option>");
+			});
+			
+			jQuery("#roleIds").trigger("chosen:updated");  
+		}
+	});
+	
+	$('.date-picker').datepicker({
+	    autoclose: true,
+	    format: 'yyyy-mm-dd',
+	    language: 'zh-CN',
+	    //todayBtn: 'linked',
+	    //startDate:new Date(2014,10,27),
+		//endDate:'+60d',
+	    startDate: '+1d',
+	}).next().on(ace.click_event, function(){
+		$(this).prev().focus();
+	});
+	
+	
+	//回选 下拉框
+	jQuery("#search_state option[value='${(returnDatas.queryBean.state)!'1'}']").attr("selected",true);
+	
+	// 单击列表中的每一行事件
+	$(".sub_left_menu tbody tr").click(function() {
+		$(".sub_left_menu tbody tr.active").removeClass("active");
+		$(this).attr("class", "active");
+		var _url = ctx + "/system/user/look/json?id=" + $(this).attr("id");
+		jQuery.ajax({
+			url : _url,
+			type : "post",
+			dataType : "json",
+			success : function(_json) {
+				if(_json.status=="success"){
+					showdata(_json);
+				}
+			}
+		});
+		return false;
+	})*/
+	
+	$("#ids").click(function(){
+		if($(this).prop("checked")){
+			$("input[name='check_li']").each(function(){ 
+				 $(this).prop("checked","true");
+			}) 
+		}else{
+			$("input[name='check_li']").each(function(){ 
+				$(this).removeAttr("checked");
+			}) 
+		}
+	});
+	
+	$("input[name='check_li']").click(function(){
+		var flag=$(this).prop("checked");
+		if(flag){
+			flag=checkCheckBox(flag);
+			if(flag){
+				$("#ids").prop("checked","true");
+			}
+		}else{
+			$("#ids").removeAttr("checked");
+		}
+	});
+});
+function checkCheckBox(flag) {
+	if(flag){
+		$("input[name='check_li']").each(function(){
+			if(!$(this).prop("checked")){
+				return flag=false;
+			}
+		})
+	}else{
+		$("input[name='check_li']").each(function(){
+			if($(this).prop("checked")){
+				return flag=true;
+			}
+		})
+	}
+	return flag;
+}
+
+var user_org_modal=null;
+function showOrgModal(){
+	if(user_org_modal != null){
+		user_org_modal.show();
+		return;
+	}
+	
+	user_org_modal=$.scojs_modal({
+		  title: '选择组织',
+		  remote: "${ctx}/system/org/tree/pre",
+		  uuid:"orgCheckBoxTree",
+		  fun_confirm:"selectOrgVal"
+		  
+		});
+	user_org_modal.show();
+}
+
+
+function selectOrgVal(uuid){
+
+	var orgCheckBoxTree = $.fn.zTree.getZTreeObj(uuid);
+	var nodes = orgCheckBoxTree.getCheckedNodes(true);
+	if(nodes.length < 1){
+		myalert("请选择一个组织!");
+		return;
+	}
+	var orgNames="";
+	var orgIds="";
+	jQuery(nodes).each(function(i,_obj){
+		orgNames+=_obj.name+",";
+		orgIds+=_obj.id+",";
+	});
+	
+	jQuery("#orgNames").val(orgNames);
+	jQuery("#orgIds").val(orgIds);
+	user_org_modal.close();
+}
+
+function deleteUser(){
+	var id = jQuery("#id").val();
+	if (!id || id == "") {
+		myalert("请选择你要删除的记录");
+		return;
+	} else {
+		var _url = "${ctx}/system/user/delete?id="+id;
+		var listurl = "${ctx}/system/user/list";
+		mydelete(_url, listurl);
+	}
+}
+
+function showdata(result) {
+	$("#account").attr("readonly",true);
+	$("#workno").attr("readonly",true);
+	for (var s in result.data) {
+		set_val(s, result.data[s]);
+	}
+	var orgNames = "";
+	var orgIds = "";
+	jQuery(result.data["userOrgs"]).each(function(i, _obj) {
+		orgNames += _obj.name + ",";
+		orgIds += _obj.id + ",";
+	});
+	jQuery("#orgNames").val(orgNames);
+	jQuery("#orgIds").val(orgIds);
+	
+	jQuery("#password").val("");
+	
+	// 处理角色表单字段
+	$("#roleIds").find("option:selected").each(function(){
+		$(this).prop("selected", false);
+	});
+	jQuery(result.data["userRoles"]).each(function(i, _obj) {
+		jQuery("#roleIds option[value='" + _obj.id + "']").prop("selected", true);
+	});
+	jQuery("#roleIds").trigger("chosen:updated");  
+}
+
+//添加用户
+function commonSaveUser(){
+	var account = jQuery("#account").val();
+	var name = jQuery("#name").val();
+	var password = jQuery("#password").val();
+	var roleIds = jQuery("#roleIds").val();
+	var mobile = jQuery("#mobile").val();
+	var state = jQuery("#state").val();
+	$.ajax({
+		url:ctx + "/system/user/save",
+		type:"post",
+		data:"account="+account+"&name="+name+"&password="+password+"&roleIds="+roleIds+"&state="+state+"&mobile="+mobile,
+		success:function(msg){
+			if(msg=="0"){
+				myalert("恭喜你！添加成功。");
+				myhref(ctx + "/system/user/list");
+			}
+			if(msg=="1"){
+			     
+				myalert("请把资料填写完整!");
+				myhref(ctx + "/system/user/list");
+			}
+			if(msg=="2"){
+				myalert("你填写的数据已存在!请核对后添加!");
+				myhref(ctx + "/system/user/list");
+			}
+		},
+		error:function(){
+			myalert("添加失败，请稍后再试！");
+		}
+	});
+	
+}
+
+//提交修改表单
+function commonUpdateForms(form, listurl) {
+	myconfirm("确定修改数据吗?", function() {
+		if (!form) {
+			form = "updateForm";
+		}
+		jQuery.post($('#' + form).attr('action'), $('#' + form).serialize(),
+			function(_json) {
+				if (_json == "1") {
+					myalert("用户姓名或移动号码为空！", function() {
+						myhref(listurl);
+					});
+				}
+				if(_json == "0"){
+					myalert("修改成功！", function() {
+						myhref(listurl);
+					});
+				}
+			}
+		);
+	});
+	
+}
+
+//删除多条
+function deleteMore(){
+	var records="";
+	$("input[name='check_li']:checkbox:checked").each(function(){ 
+		records+=$(this).val()+",";
+	}) 
+	records=records.substring(0, records.length-1);
+    if (records=="") {
+        alert('未选中任何记录!');
+        return;
+    }
+	var url = ctx + "/system/user/delete/more";
+	if(confirm("数据删除后将不能恢复,确定要删除选中的数据么?")){
+    	$.ajax({
+    		url:url,
+    		type:"post",
+    		data:"records="+records,
+    		dataType:"text",
+    		success:function(msg){
+    			if(msg==0){
+    				alert("恭喜你！删除成功");
+    				window.location.href = ctx +"/system/user/list";
+    			}else{
+    				alert("删除失败");
+    				window.location.href = ctx +"/system/user/list";
+    			}
+    		},
+    		error:function(){
+    			alert("系统异常，请稍后再试！");
+    		}
+    	});
+	}
+}
+
+function mySubmitForm(formId,_target){
+	if (typeof(_target) == "undefined" || _target == "") { 
+		   
+		}else{
+			$("#pageIndex").val("1");
+		}
+	$("#"+formId).submit();
+}
+function resetVal(){
+	$("#account_").val("");
+	$("#name_").val("");
+	$("#state_").val("");
+}
+
+function beforeAdd(){
+	var url = "${ctx}/system/user/gotoAdd";
+	$("#searchForm").attr("action",url);
+	$("#searchForm").submit();
+}
+
+function beforeUpdate(id){
+	$("#id").val(id);
+	var url = "${ctx}/system/user/beforeUpdate";
+	$("#searchForm").attr("action",url);
+	$("#searchForm").submit();
+}
+//-->
+</script>
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>用户管理</span></div>
+  <form id="searchForm" name="searchForm" action="${ctx}/system/user/list" method="post">
+		<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+		<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+		<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+		<input type="hidden" name="id" id="id" />
+  
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tb_searchbox mt20 bord_gray">
+    <tr>
+      <td>用户账号：
+        <input class="input_normal w160" type="text" id="account_" name="account" value="${(account)!''}"/>
+        用户名称：
+        <input class="input_normal w160" type="text" id="name_" name="name" value="${(name)!''}"/>
+        <br/>
+        是否有效：
+        <select  name="state" id="state_">
+          <#if "${(user.state)!''}"== '1'>
+          <option value="">全部</option>
+          <option value="1" selected="selected">有效</option>
+          <option value="0">无效</option>
+          <#elseif "${(user.state)!''}"== '0'>
+          <option value="">全部</option>
+          <option value="1">有效</option>
+          <option value="0" selected="selected">无效</option>
+          <#else>
+          <option value="" selected="selected">全部</option>
+          <option value="1">有效</option>
+          <option value="0">无效</option>
+          </#if>
+        </select>
+        
+      <span class="mr20"><a href="javascript:mySubmitForm('searchForm','CL');" class="bt_blue"><span>查询</span></a></span><a href="javascript:resetVal();" class="bt_blue"><span>重置</span></a></span></td>
+    </tr>
+  </table>
+  <p class="overflow mt10">
+  	<a class="bt_blue ml10 fr" href="javascript:void(0);" onclick="beforeAdd();"><span>添加</span></a>
+  	
+  	<@shiro.hasPermission name="/system/user/delete" >
+  	<a class="bt_blue ml10 fr" href="javascript:void(0);" onclick="deleteMore();"><span>批量删除</span></a>
+  	</@shiro.hasPermission>
+  </p>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mt15 tb_content1">
+    <tr>
+      <th width="30"><input class="checkedAll" type="checkbox"  name="ids" id="ids" /></th>
+      <th>用户账号</th>
+      <th>用户名称</th>
+      <th>用户工号</th>
+      <th>是否有效</th>
+      <th>操作</th>
+    </tr>
+    <#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+	   <#list returnDatas.data as _data>
+			<tr id="${(_data.id)!''}">
+			    <td><input  type="checkbox"  name="check_li" value="${(_data.id)!''}" /></td>
+				<td>${(_data.account)!''}</td>
+				<td>${(_data.name)!''}</td>
+				<td>${(_data.workno)!''}</td>
+				<td>
+					<#if "${(_data.state)!''}" == '1'>有效</#if>
+					<#if "${(_data.state)!''}" == '0'>无效</#if>
+				</td>
+				<td>
+					<a href="javascript:void(0);" onclick="beforeUpdate('${(_data.id)!''}');">编辑</a>
+				</td>
+			</tr>
+        </#list>
+	 </#if>
+  </table>
+  		<!-- 分页 -->
+  		<#if returnDatas.page??>
+			<@h.pagetoolbar page=returnDatas.page formId='searchForm' />
+		</#if>
+  </form>
+</div>
+
+</body>
+
+<!-- /.main-container -->
+
+</#escape>

@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#escape x as x?html>
+<@h.head />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="${ctx}/js/sinova/business/business.js"></script>
+
+<body class="bg_cff">
+<div class="mainBox">
+  <div class="route"><span>二维码直通车</span>&nbsp;&gt;&nbsp; <span>业务管理</span></div>
+  <form id="searchForm" name="searchForm" action="${ctx}/business/list" method="post">
+		<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+		<!--  <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />-->
+		<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+		<input type="hidden" name="id" id="id" />
+  
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tb_searchbox mt20 bord_gray">
+    <tr>
+      <td>业务编号：
+        <input class="input_normal w160" id="busCode_" name="busCode" value="${(business.busCode)!''}"/>
+        业务名称：
+        <input class="input_normal w160" id="busName_" name="busName" value="${(business.busName)!''}"/>
+        <br/>
+        上/下架：
+        <select id="upDown_" name="upDown">
+           <#if "${business.upDown!''}"== '1'>
+			    <option value="" >全部</option>
+				<option value="1" selected="selected">上架</option>
+			    <option value="0">下架</option>
+			<#elseif  "${business.upDown!''}" == '0'>
+				<option value="" >全部</option>
+				<option value="1">上架</option>
+			    <option value="0" selected="selected">下架</option>
+			<#else>
+				<option value="" selected="selected">全部</option>
+				<option value="1">上架</option>
+			    <option value="0">下架</option>
+			</#if>
+        </select>
+        业务类型：
+        <select id="busType_" name="busType">
+          <option value="" >全部</option>
+			<#if (BusTypes??)&&(BusTypes?size>0)>
+				<#list BusTypes as _data>
+					<#if "${(_data.remark)!''}" == "${(business.busType)!''}">
+						<option value="${(_data.remark)!''}" selected="selected">${(_data.name)!''}</option>
+					<#else>
+						<option value="${(_data.remark)!''}" >${(_data.name)!''}</option>
+					</#if>	
+		        </#list>
+		    </#if>
+        </select>
+        <span class="mr20"><a href="javascript:mySubmitForm('searchForm','CL');" class="bt_blue"><span>查询</span></a></span><a href="javascript:resetVal();" class="bt_blue"><span>重置</span></a></span></td>
+    </tr>
+  </table>
+  <p class="overflow mt10">
+  	<@shiro.hasPermission name="/business/delete" >
+  	<a class="bt_blue ml10 fr" href="javascript:void(0);" onclick="upDownBusinessBeath('0');"><span>批量下架</span></a>
+  	<a class="bt_blue ml10 fr" href="javascript:void(0);" onclick="upDownBusinessBeath('1');"><span>批量上架</span></a>
+  	<a class="bt_blue ml10 fr" href="javascript:void(0);" onclick="deleteMore();"><span>批量删除</span></a>
+  	</@shiro.hasPermission>
+  	<@shiro.hasPermission name="/business/beforeAdd" >
+  	<a class="bt_blue ml10 fr" href="javascript:void(0);" onclick="beforeAdd();"><span>添加</span></a>
+  	</@shiro.hasPermission>
+  </p>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mt15 tb_content1">
+    <tr>
+      <th width="30"><input class="checkedAll" type="checkbox"  name="items" id="ids" /></th>
+      <th>业务编号 </th>
+      <th>业务名称</th>
+      <th>业务类型 </th>
+      <th>上下架</th>
+      <th>操作</th>
+    </tr>
+    <#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+		<#list returnDatas.data as _data>
+				<tr id="${(_data.id)!''}">
+					<td>
+						<input name="check_li"  type="checkbox" value="${(_data.id)!''}" />
+						<input id="${(_data.id)!''}_busType" type="hidden" value="${(_data.busType)!''}"/>
+					</td>
+					<td>
+						<label>${(_data.busCode)!''}</label>
+					</td>
+					<td>
+						${(_data.busName)!''}
+					</td>
+					<td>
+						<#if (BusTypes??)&&(BusTypes?size>0)>
+							<#list BusTypes as _bdata>
+								<#if "${(_bdata.remark)!''}" == "${(_data.busType)!''}">
+									${(_bdata.name)!''}
+									<#break>
+								</#if>	
+					        </#list>
+				   		</#if>
+					</td>
+					<td>
+					 	<#if "${(_data.upDown)!''}"= '1'>
+					已上架
+					 <#elseif "${(_data.upDown)!''}"= '0'>
+					 已下架
+					 </#if>
+					</td>
+			        <td>
+			        <@shiro.hasPermission name="/business/update" >
+			        <#-- 如果是营销活动上下架操作按钮去掉 -->
+			        	<#if "${(_data.busType)!''}" != '200'>
+				        	<#if "${(_data.upDown)!''}"= '1'>
+				        	<a href="javascript:void(0);" onclick="upDownBusiness('${(_data.id)!''}','0');">下架</a>
+				        	<#elseif "${(_data.upDown)!''}"= '0'>
+				        	<a href="javascript:void(0);" onclick="upDownBusiness('${(_data.id)!''}','1');">上架</a>
+				        	</#if>
+			        	</#if>
+			        	<a class="ml10" href="javascript:void(0);" onclick="beforeUpdate('${(_data.id)!''}');">编辑</a>
+			        </@shiro.hasPermission>&nbsp;
+			        </td>
+				</tr>
+		</#list>
+	</#if>
+  </table>
+  		<!-- 分页 -->
+  		<#if returnDatas.page??>
+			<@h.pagetoolbar page=returnDatas.page formId='searchForm' />
+		</#if>
+	</form>
+</div>
+</body>
+
+</#escape>
+
+
