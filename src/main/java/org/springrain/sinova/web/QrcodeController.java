@@ -910,9 +910,9 @@ public class QrcodeController extends BaseController {
 			// String url = gen.generateStringArg(paramsJson);
 
 			// 生成二维码
-			QrcodeUtils.encoderQRCode(qrcodeUrl + "?param=" + flowNo, filePath
+			/*QrcodeUtils.encoderQRCode(qrcodeUrl + "?param=" + flowNo, filePath
 					+ path + fileName, filePath + path + "logo.png");
-
+*/
 			// save Qrcode 表
 			Qrcode qrcodeDto = new Qrcode();
 			qrcodeDto.setId(null);
@@ -1024,9 +1024,9 @@ public class QrcodeController extends BaseController {
 			String filePath = request.getServletContext().getRealPath("/");
 
 			// 生成二维码
-			QrcodeUtils.encoderQRCode(qrcodeUrl + "?param=" + flowNo, filePath
+			/*QrcodeUtils.encoderQRCode(qrcodeUrl + "?param=" + flowNo, filePath
 					+ path + fileName, filePath + path + "logo.png");
-
+*/
 			// save Qrcode 表
 			Qrcode qrcodeDto = new Qrcode();
 			qrcodeDto.setId(null);
@@ -1180,8 +1180,8 @@ public class QrcodeController extends BaseController {
 			String qrcodeurl = pfCache.get(Const.SYSTEM_FILE, "exqrcodeUrl");
 			String filePath = request.getServletContext().getRealPath("/");
 			// 生成二维码
-			QrcodeUtils.encoderQRCode(qrcodeurl + "?param=" + flowNo, filePath
-					+ path + fileName, filePath + path + "logo.png");
+			/*QrcodeUtils.encoderQRCode(qrcodeurl + "?param=" + flowNo, filePath
+					+ path + fileName, filePath + path + "logo.png");*/
 
 			String exUrl = "";
 			String spare1 = "";

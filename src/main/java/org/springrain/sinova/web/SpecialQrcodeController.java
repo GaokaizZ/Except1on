@@ -361,9 +361,9 @@ public class SpecialQrcodeController extends BaseController{
 				String filePath = request.getServletContext().getRealPath("/");
 
 				// 生成二维码
-				QrcodeUtils.encoderQRCode(qrcodeUrl + "?param=" + flowNo, filePath
+				/*QrcodeUtils.encoderQRCode(qrcodeUrl + "?param=" + flowNo, filePath
 						+ path + fileName, filePath + path + "logo.png");
-
+*/
 				// save Qrcode 表
 				Qrcode qrcodeDto = new Qrcode();
 				qrcodeDto.setId(null);

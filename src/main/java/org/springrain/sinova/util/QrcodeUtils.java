@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springrain.frame.common.BaseLogger;
 
-import com.swetake.util.Qrcode;
+
 
 /**
  * 二维码生成器工具类
@@ -35,7 +35,7 @@ public class QrcodeUtils {
      * @param content
      * @param imgPath
      */
-    public static void encoderQRCode(String content, String imgPath,String ccbPath) {
+   /* public static void encoderQRCode(String content, String imgPath,String ccbPath) {
         try {
 
             Qrcode qrcodeHandler = new Qrcode();
@@ -74,14 +74,14 @@ public class QrcodeUtils {
                 System.err.println("QRCode content bytes length = " + contentBytes.length + " not in [ 0,130 ]. ");
             }
             Image logo = ImageIO.read(new File(ccbPath));//实例化一个Image对象。  
-   /*         int widthLogo = logo.getWidth(null)>bufImg.getWidth()*2/10?(bufImg.getWidth()*2/10):logo.getWidth(null),   
-                heightLogo = logo.getHeight(null)>bufImg.getHeight()*2/10?(bufImg.getHeight()*2/10):logo.getWidth(null);  */
+            int widthLogo = logo.getWidth(null)>bufImg.getWidth()*2/10?(bufImg.getWidth()*2/10):logo.getWidth(null),   
+                heightLogo = logo.getHeight(null)>bufImg.getHeight()*2/10?(bufImg.getHeight()*2/10):logo.getWidth(null);  
             int widthLogo =35,heightLogo=35;
             		
              
-             /** 
+             *//** 
                * logo放在中心   
-              */  
+              *//*  
             int x = (bufImg.getWidth() - widthLogo) / 2;  
             int y = (bufImg.getHeight() - heightLogo) / 2;  
             gs.drawImage(logo, x, y, widthLogo, heightLogo, null);  
@@ -107,5 +107,5 @@ public class QrcodeUtils {
         handler.encoderQRCode(content, imgPath,aa);
 
         System.out.println("encoder QRcode success");
-    }
+    }*/
 }
