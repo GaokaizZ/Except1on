@@ -1,5 +1,5 @@
 项目为Maven项目，相关的依赖包也已经下载到本地，但是启动tomcat时报错找不到ContextLoaderListener和IntrospectorCleanupListener，
-后来在网上搜索答案发现工程部署后没有把依赖jar包都部署到在WEB-INF文件夹的lib目录。
+后来发现工程部署后没有把依赖jar包都部署到在WEB-INF文件夹的lib目录。
 
 解决方案：
 
