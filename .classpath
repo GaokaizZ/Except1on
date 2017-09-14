@@ -11,27 +11,22 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry including="**/*.java" kind="src" output="target/test-classes" path="src/test/java">
-		<attributes>
-			<attribute name="optional" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="src" path="src/main/config"/>
-	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+	<classpathentry exported="true" kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/Qrcode.jar"/>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/axis.jar"/>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jaxrpc.jar"/>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/tools.jar"/>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/wsdl4j-1.5.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/main/webapp/WEB-INF/lib/Qrcode.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/main/webapp/WEB-INF/lib/axis.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/main/webapp/WEB-INF/lib/jaxrpc.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/main/webapp/WEB-INF/lib/tools.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/main/webapp/WEB-INF/lib/wsdl4j-1.5.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
