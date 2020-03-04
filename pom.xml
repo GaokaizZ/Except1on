@@ -35,7 +35,7 @@
 		<jedis.version>2.5.2</jedis.version>
 		<shiro.version>1.2.3</shiro.version>
 		<jxl.version>2.6.12</jxl.version>
-		<jackson.version>2.9.9</jackson.version>
+		<jackson.version>2.10.3</jackson.version>
 		<fasterxml.version>2.4.2</fasterxml.version>
 		<druid.version>1.0.9</druid.version>
 
